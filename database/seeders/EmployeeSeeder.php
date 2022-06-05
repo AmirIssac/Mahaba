@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Shop\Cart;
 use App\Models\Shop\Favorite;
 use App\Models\Shop\Profile;
+use App\Models\Store;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -18,26 +19,6 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        $employee = User::create([
-            'name' => 'moaz',
-            'email' => 'moaz@dabbagh.com',
-            'password' => Hash::make('12345'),
-        ]);
-        Profile::create([
-            'user_id' => $employee->id,
-            'first_name' => 'Moaz',
-            'last_name' => 'Aldaien',
-            'phone' => '+971000000002',
-            'address_address' => null,
-            'address_latitude' => null,
-            'address_longitude' => null,
-        ]);
-        Cart::create([
-            'user_id' => $employee->id,
-        ]);
-        $employee->assignRole('employee');
-        $employee->stores()->attach(1);
-
         $employee = User::create([
             'name' => 'rami',
             'email' => 'rami@dabbagh.com',
@@ -59,6 +40,7 @@ class EmployeeSeeder extends Seeder
             'user_id' => $employee->id,
         ]);
         $employee->assignRole('employee');
-        $employee->stores()->attach(2);
+        $store_id = Store::first()->id;
+        $employee->stores()->attach($store_id);
     }
 }

@@ -19,7 +19,10 @@ class ProductController extends Controller
         $category = Category::findOrFail($id);
         $categories = Category::all();
         $products = $category->products;
-        return view('Customer.index_by_category',['categories'=>$categories,'products'=>$products]);
+        if($products->count() == 1) // enter the product directly
+            return view ('Customer.product.view',['product'=>$products->first()]);
+        else
+            return view('Customer.index_by_category',['categories'=>$categories,'products'=>$products]);
     }
 
     public function search(Request $request){

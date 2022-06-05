@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\DiscountDetail;
+use App\Models\OrderSystem;
 use App\Models\Setting;
 use App\Models\Shop\Discount;
 use App\Models\Shop\Order;
@@ -11,6 +12,7 @@ use App\Models\Shop\OrderItem;
 use App\Models\Shop\PaymentDetail;
 use App\Models\Shop\Product;
 use App\Models\Shop\Profile;
+use App\Models\Store;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -71,20 +73,20 @@ class OrderController extends Controller
                             $total_order_price += $new_price * $item->quantity;
                          }
                     else {
-                         $new_price = $item->price - $item->discount->value;   
+                         $new_price = $item->price - $item->discount->value;
                          if($item->unit == 'gram')
                             $total_order_price += $new_price * $item->quantity / 1000 ;
                          else
                             $total_order_price += $new_price * $item->quantity;
-                    }   
+                    }
                 }
                 else{   // no discount
                     if($item->unit == 'gram')
                          $total_order_price += $item->price * $item->quantity / 1000  ;
                     else
                          $total_order_price += $item->price * $item->quantity;
-                } 
-            } 
+                }
+            }
             $hours_remaining_to_deliver = $guest->calculateGuestDeliverTime();
 
             return view('Guest.order.checkout',['cart'=>$cart , 'cart_items' => $cart_items,'date' => $date, 'total_order_price' => $total_order_price,'tax'=>$tax,'guest'=>$guest,
@@ -123,13 +125,15 @@ class OrderController extends Controller
         $address = $request->address1;   // default main address
         if($request->address2)
             $address = $request->address2;
-        
+
         $estimated_time = $cart->calculateDeliverTime(true);
 
         DB::beginTransaction();
         try{
+                $store_id = Store::first()->id;  // mahaba
                 $order = Order::create([
                     'user_id' => $user->id ,
+                    'store_id' => $store_id,
                     'number' =>  $number ,
                     'status' => $order_status ,
                     'sub_total' => $total_order_price ,
@@ -137,13 +141,20 @@ class OrderController extends Controller
                     'tax_value' => $tax_value ,
                     'shipping' => 0 ,
                     'total' => $grand_order_total ,
-                    'first_name' => $request->first_name , 
+                    'first_name' => $request->first_name ,
                     'last_name' => $request->last_name ,
                     'phone' => $request->phone ,
                     'email' => $request->email ,
                     'address' => $address ,
                     'customer_note' => $request->customer_note ,
                     'estimated_time' => $estimated_time ,
+                ]);
+                // super admin
+                $super_admin = User::role('super_admin')->first();
+                $order_system = OrderSystem::create([
+                    'order_id' => $order->id,
+                    'user_id' =>  $super_admin->id,
+                    'status' => $order->status,
                 ]);
                 // inserting order_items
                 foreach($order_items_arr as $order_item){
@@ -155,7 +166,7 @@ class OrderController extends Controller
                         'quantity' => $order_item['quantity'] ,
                     ]);
                 }
-                // create discount 
+                // create discount
                 if(Session::get('points_applied')){
                     DiscountDetail::create([
                         'user_id' => $user->id ,
@@ -233,13 +244,13 @@ class OrderController extends Controller
                         $order_items_arr[] = ['product_id' => $item->id , 'price' => $new_price , 'discount' => $discount , 'quantity' => $item->quantity];
                         }
                     else {
-                        $new_price = $item->price - $item->discount->value;   
+                        $new_price = $item->price - $item->discount->value;
                         if($item->unit == 'gram')
                                 $total_order_price += $new_price * $item->quantity / 1000 ;
                         else
                                 $total_order_price += $new_price * $item->quantity;                     // order item
                         $order_items_arr[] = ['product_id' => $item->id , 'price' => $new_price , 'discount' => $item->discount->value  , 'quantity' => $item->quantity];
-                    }   
+                    }
                 }
                 else{   // no discount
                         if($item->unit == 'gram')
@@ -248,7 +259,7 @@ class OrderController extends Controller
                             $total_order_price += $item->price * $item->quantity;
                         // order item
                         $order_items_arr[] = ['product_id' => $item->id , 'price' => $item->price , 'discount' => 0  , 'quantity' => $item->quantity];
-                } 
+                }
             }
             $tax_value = $tax * $total_order_price / 100 ;
             $grand_order_total = $total_order_price + $tax_value ;
@@ -259,7 +270,7 @@ class OrderController extends Controller
             $address = $request->address1;   // default main address
             if($request->address2)
                 $address = $request->address2;
-            
+
             $estimated_time = $guest->calculateGuestDeliverTime(true);
 
             $order = Order::create([
@@ -271,7 +282,7 @@ class OrderController extends Controller
                 'tax_value' => $tax_value ,
                 'shipping' => 0 ,
                 'total' => $grand_order_total ,
-                'first_name' => $request->first_name , 
+                'first_name' => $request->first_name ,
                 'last_name' => $request->last_name ,
                 'phone' => $request->phone ,
                 'email' => $request->email ,

@@ -14,14 +14,6 @@ class StoresSeeder extends Seeder
      */
     public function run()
     {
-        Store::create([
-            'name_en' => 'Al Jubail market',
-            'name_ar' => 'سوق الجبيل',
-            'address' => 'الشارقة / سوق الجبيل',
-            'contact_phone' => '+971000000000',
-            'address_latitude' => 25.35263 ,
-            'address_longitude' => 55.38012 ,
-        ]);
 
         Store::create([
             'name_en' => 'Al Mahaba',
@@ -32,13 +24,5 @@ class StoresSeeder extends Seeder
             'address_longitude' => 55.372429 ,
         ]);
 
-        Store::create([
-            'name_en' => 'Al Ain',
-            'name_ar' => 'فرع العين',
-            'address' => 'العين',
-            'contact_phone' => '+971000000002',
-            'address_latitude' => 24.207500 ,
-            'address_longitude' => 55.744720 ,
-        ]);
     }
 }

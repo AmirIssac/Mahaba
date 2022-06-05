@@ -8447,9 +8447,19 @@ fieldset:disabled .btn {
     background-color: #622521 !important;
 }
 
+.bg-second {
+    --bs-bg-opacity: 1;
+    background-color: #e4eef0 !important;
+}
+
 .text-prim {
     --bs-text-opacity: 1;
     color: #f5ebeb !important;
+}
+
+.text-second {
+    --bs-text-opacity: 1;
+    color: #622521 !important;
 }
 
 .bg-black {
