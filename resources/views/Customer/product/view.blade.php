@@ -9,6 +9,7 @@
     }
     .category_img{
         border-radius: 8px;
+        filter: drop-shadow(3px 5px 3px #e4eef0);
      }
     @media only screen and (max-width: 600px) {
         .product-div {
@@ -76,9 +77,11 @@
                             <select id="weight-in-gram">
                                 <?php $quantity = $product->min_weight / 1000 ;
                                       $increasing = $product->increase_by / 1000 ;
+                                      $loop_counter = 1 ;
                                 ?>
-                                @for($i=$quantity ; $i <= 10 ; $i+=$increasing)
+                                @for($i=$quantity ; $loop_counter <= 12 ; $i+=$increasing)
                                     <option value="{{ $i * 1000 }}">{{ $i }} K.G</option>
+                                    <?php $loop_counter++ ?>
                                 @endfor
                             </select>
                     </div>

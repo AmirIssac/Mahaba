@@ -67,8 +67,13 @@
                         <div style="color: red; font-weight:bold;">{{ $message }}</div>
                         @enderror
                         <label class="form-label" for="form3Example3">Phone</label>
-                        <input type="text" id="form3Example3" name="phone" class="form-control form-control-lg"
-                         />
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1">+971</span>
+                            </div>
+                            <input type="text" class="form-control" name="phone" placeholder="5xxxxxxxx" aria-label="Username" aria-describedby="basic-addon1">
+                          </div>
                       </div>
 
                     <div class="text-center text-lg-start mt-2">

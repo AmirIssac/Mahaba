@@ -3,90 +3,35 @@
 <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
 <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
 @endsection
-@section('content')
-<section style="margin-top: -100px;" class="contact spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-6 text-center">
-                <div class="contact__widget">
-                    <span class="icon_phone"></span>
-                    <h4>Phone</h4>
-                    <p>{{$profile->phone}}</p>
+@section('body')
+<!-- Header-->
+<header class="bg-prim py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white my-sheep-header">
+            <h1 class="display-4 fw-bolder text-prim">خاروفي</h1>
+            <div style="display: flex; justify-content: space-around;" class="my-sheep-content">
+                <div style="display: flex; flex-direction: column">
+                    <i style="font-size: 32px;" class="fa-solid fa-phone"></i>
+                    {{$profile->phone}}
+                </div>
+                <div style="display: flex; flex-direction: column">
+                    <i style="font-size: 32px;" class="fa-solid fa-box-open"></i>
+                    {{$orders_count}}
+                </div>
+                <div style="display: flex; flex-direction: column">
+                    <i style="font-size: 32px;" class="fa-solid fa-envelope"></i>
+                    {{$user->email}}
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 text-center">
-                <div class="contact__widget">
-                    <i class="fa fa-shopping-cart order-icon"></i>
-                    <h4>Orders</h4>
-                    <p>{{$orders_count}}</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 text-center">
-                <div class="contact__widget">
-                    <span class="icon_box-checked"></span>
-                    <h4>Points</h4>
-                    <p>{{$profile->points}}</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 text-center">
-                <div class="contact__widget">
-                    <span class="icon_mail_alt"></span>
-                    <h4>Email</h4>
-                    <p>{{$user->email}}</p>
-                </div>
-            </div>
+            <p class="lead fw-normal text-white-50 mb-0"> Dabbagh | دباغ</p>
         </div>
     </div>
-</section>
+</header>
 
-<!-- Contact Form Begin -->
-<div style="margin-top: -100px" class="contact-form spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="contact__form__title">
-                    <h2>My Information</h2>
-                </div>
-            </div>
-        </div>
-        <form action="{{route('submit.profile')}}" method="POST">
-            @csrf
-            <div class="row">
-                <div class="col-lg-4 col-md-4">
-                    <label>First Name</label>
-                    <input type="text" name="first_name" value="{{$profile->first_name}}">
-                </div>
-                <div class="col-lg-4 col-md-4">
-                    <label>Last Name</label>
-                    <input type="text" name="last_name" value="{{$profile->last_name}}">
-                </div>
-                <div class="col-lg-4 col-md-4">
-                    <label>Phone</label>
-                    <input type="text" name="phone" value="{{$profile->phone}}">
-                </div>
-                <div class="col-lg-4 col-md-4">
-                    <label>Address</label>
-                    <input type="text" name="address_address" id="address">
-                    <input type="hidden" name="address_latitude" id="latitude">
-                    <input type="hidden" name="address_longitude" id="longitude">
-                    <button type="submit" class="site-btn">Submit</button>
-                </div>
-                
-                {{--
-                <div class="col-lg-12 text-center">
-                    <textarea placeholder="Your message"></textarea>
-                    <button type="submit" class="site-btn">SEND MESSAGE</button>
-                </div>
-                --}}
-            </div>
-        </form>
-    </div>
-</div>
-<!-- Contact Form End -->
 
 <!-- Map Begin -->
 <div id="map" class="map">
-    
+
 </div>
 <!-- Map End -->
 

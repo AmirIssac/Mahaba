@@ -83,7 +83,6 @@
                         <input type="hidden" id="final-item-price{{$counter}}" value="{{$new_price}}">
                         {{$new_price}}
                         @else
-
                             <input type="hidden" id="final-item-price{{$counter}}" value="{{$item->product->price}}">
                             {{$item->product->price}}
                         @endif
@@ -112,7 +111,7 @@
                         <td>
                             <form action="{{route('delete.cart.item',$item->id)}}" method="POST">
                                 @csrf
-                                <button style="border: none; background-color: transparent" onclick="javascript:this.form.submit();" class="icon_close"></button>
+                                <button style="border: none; background-color: transparent" class="btn btn-danger" onclick="javascript:this.form.submit();"><i class="fa-solid fa-delete-left"></i></button>
                             </form>
                         </td>
                     </tr>
@@ -152,7 +151,6 @@
     <div class="container">
         <div class="text-center text-white product-div">
             <div class="row bg-second">
-
                 <div class="col-lg-6 text-second">
                     <div style="background-color: #f5ebeb" id="checkout-box">
                         <h5>Cart Total</h5>
