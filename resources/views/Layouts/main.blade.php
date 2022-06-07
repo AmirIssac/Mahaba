@@ -14,6 +14,17 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{{asset('css/styles.css')}}" rel="stylesheet" />
         <script src="https://kit.fontawesome.com/aa3f80bbad.js" crossorigin="anonymous"></script>
+        <style>
+            .primary-button{
+                background-color: #622521;
+                border: 1px solid #e4eef0;
+                border-radius: 8px;
+                color: #e4eef0;
+                font-weight: bold;
+                width: 100px;
+                height: 35px;
+            }
+        </style>
         @yield('links')
     </head>
     <body>
@@ -52,6 +63,7 @@
                         </li>
                     </ul>
 
+                    @if(Auth::user())
                     <a class="btn btn-outline-dark" href="{{ route('view.cart') }}">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
@@ -59,6 +71,12 @@
                         <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                         --}}
                     </a>
+                    @else
+                    <a class="btn btn-outline-dark" href="{{ route('view.guest.cart') }}">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                    </a>
+                    @endif
 
                 </div>
             </div>

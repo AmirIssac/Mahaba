@@ -64,13 +64,20 @@
                             </ul>
                         </li>
                     </ul>
-                        <a class="btn btn-outline-dark" href="{{ route('view.cart') }}">
-                            <i class="bi-cart-fill me-1"></i>
-                            Cart
-                            {{--
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                            --}}
-                        </a>
+                    @if(Auth::user())
+                    <a class="btn btn-outline-dark" href="{{ route('view.cart') }}">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        {{--
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                        --}}
+                    </a>
+                    @else
+                    <a class="btn btn-outline-dark" href="{{ route('view.guest.cart') }}">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                    </a>
+                    @endif
                 </div>
             </div>
         </nav>
