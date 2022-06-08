@@ -302,7 +302,6 @@
                     </div>
                 </div>
 
-
                 {{--  login --}}
                 <div class="col-lg-6 text-second displaynone" id="have-account-form">
                     <div style="background-color: #f5ebeb" id="checkout-box">

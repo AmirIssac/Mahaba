@@ -11,6 +11,18 @@
         border-radius: 8px;
         filter: drop-shadow(3px 5px 3px #e4eef0);
      }
+     .view-btn{
+                background-color: wheat;
+                color: #622521;
+                font-weight: bold;
+                width: 50px;
+                height: 35px;
+     }
+     .view-btn:hover{
+         text-decoration: none;
+         color: #622521;
+         background-color: white;;
+     }
     @media only screen and (max-width: 600px) {
         .product-div {
             display: flex;
@@ -69,11 +81,11 @@
                     --}}
                     <div style="display: flex; justify-content: space-around">
                         @if($product->availability)
-                        <button id="add-to-cart" class="btn btn-success"> <i class="fa fa-cart-plus"></i> </button>
+                        <button id="add-to-cart" class="btn view-btn"> <i class="fa fa-cart-plus"></i> </button>
                         @else
                         <button id="add-to-cart" class="btn btn-danger" disabled> <i class="fa fa-cart-plus"></i> </button>
                         @endif
-                        <button id="favorite-btn" class="btn btn-success"><i class="fa-solid fa-heart-circle-plus"></i> </button>
+                        <button id="favorite-btn" class="btn view-btn"><i class="fa-solid fa-heart-circle-plus"></i> </button>
                             <select id="weight-in-gram">
                                 <?php $quantity = $product->min_weight / 1000 ;
                                       $increasing = $product->increase_by / 1000 ;

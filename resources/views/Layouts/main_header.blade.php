@@ -15,6 +15,22 @@
         <link href="{{asset('css/styles.css')}}" rel="stylesheet" />
         <script src="https://kit.fontawesome.com/aa3f80bbad.js" crossorigin="anonymous"></script>
         <style>
+            body{
+                background-color: #f5ebeb;
+            }
+            .primary-button{
+                background-color: #622521;
+                border: 1px solid #e4eef0;
+                border-radius: 8px;
+                color: #e4eef0;
+                font-weight: bold;
+                width: 100px;
+                height: 35px;
+            }
+            a.primary-button:hover{
+                text-decoration: none !important;
+                color: white !important;
+            }
             @media only screen and (max-width: 600px) {
                 .my-sheep-content {
                     flex-direction: column;
@@ -44,28 +60,27 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @if(Auth::user())
                                     @if(Auth::user()->adminstrative())
-                                        <li><a class="dropdown-item" href="{{route('dashboard')}}">Dashboard</a></li>
+                                        <li><a class="dropdown-item" href="{{route('dashboard')}}"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
                                     @endif
-                                    <li><a class="dropdown-item" href="{{route('my.profile')}}">My profile</a></li>
+                                    <li><a class="dropdown-item" href="{{route('my.profile')}}"><i class="fa-solid fa-address-card"></i> My profile</a></li>
                                     <li><hr class="dropdown-divider" /></li>
-                                    <li><a class="dropdown-item" href="{{route('view.cart')}}">My cart</a></li>
-                                    <li><a class="dropdown-item" href="{{route('my.orders')}}">My orders</a></li>
-                                    <li><a class="dropdown-item" href="#" style="color: #ffa909">{{$point}} point</a></li>
+                                    <li><a class="dropdown-item" href="{{route('view.cart')}}"><i class="fa-solid fa-cart-shopping"></i> My cart</a></li>
+                                    <li><a class="dropdown-item" href="{{route('my.orders')}}"><i class="fa-solid fa-box"></i> My orders</a></li>
                                     <li><hr class="dropdown-divider" /></li>
                                     <li class="dropdown-item">
                                         <form id="logout-form" action="{{route('logout')}}" method="POST">
                                             @csrf
-                                            <a style="color: rgb(255, 34, 34)" href="javascript:$('#logout-form').submit();">logout</a>
+                                            <a style="color: rgb(255, 34, 34)" href="javascript:$('#logout-form').submit();"class="dropdown-item"><i class="fa-solid fa-arrow-right-from-bracket"></i> logout</a>
                                         </form>
                                     </li>
                                 @else
-                                <li><a class="dropdown-item" href="{{ route('login') }}">Login</a></li>
+                                <li><a class="dropdown-item" href="{{ route('login') }}"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</a></li>
                                 @endif
                             </ul>
                         </li>
                     </ul>
                     @if(Auth::user())
-                    <a class="btn btn-outline-dark" href="{{ route('view.cart') }}">
+                    <a class="btn primary-button" href="{{ route('view.cart') }}">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
                         {{--
@@ -73,7 +88,7 @@
                         --}}
                     </a>
                     @else
-                    <a class="btn btn-outline-dark" href="{{ route('view.guest.cart') }}">
+                    <a class="btn primary-button" href="{{ route('view.guest.cart') }}">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
                     </a>
