@@ -15,6 +15,11 @@
             color: #7fad39;
             font-weight: bold;
         }
+        #order-details-container{
+            padding: 10px;
+            background-color: #622521;
+            color: #fff;
+        }
     </style>
 @endsection
 @section('body')
@@ -31,13 +36,13 @@
                                     <div class="col-lg-6" style="margin: 8px 0px;">
                                         <div>
                                             Fist Name<span>*</span>
-                                            <input type="text" name="first_name" value="{{$profile->first_name}}">
+                                            <input type="text" name="first_name" value="{{$profile->first_name}}" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-lg-6" style="margin: 8px 0px;">
                                         <div>
                                             Last Name<span>*</span>
-                                            <input type="text" name="last_name" value="{{$profile->last_name}}">
+                                            <input type="text" name="last_name" value="{{$profile->last_name}}" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -48,10 +53,10 @@
                                     <label>
                                         Ship to a different address ?
                                     </label>
-                                    <input type="text" placeholder="type address here if it's different from your main profile address" name="address2" id="address2">
+                                    <input type="text" placeholder="type address here if it's different from your main profile address" class="form-control" name="address2" id="address2">
                                 @else
                                     Address
-                                <input type="text" name="address2" id="address2">
+                                <input type="text" name="address2" id="address2" class="form-control">
                                 @endif
                                 </div>
                                 <div class="row">
@@ -68,7 +73,7 @@
                                                 $phone = substr($user->profile->phone, 5);
                                                 $phone = '0'.$phone;
                                              ?>
-                                            <input type="text" name="phone" value="{{$phone}}" placeholder="0500000000">
+                                            <input type="text" name="phone" value="{{$phone}}" placeholder="0500000000" class="form-control">
 
                                         </div>
                                     </div>
@@ -81,23 +86,23 @@
                                             @else
                                             Email<span>*</span>
                                             @endif
-                                            <input type="text" name="email" value="{{$user->email}}" required>
+                                            <input type="text" name="email" value="{{$user->email}}" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div style="margin: 8px 0px;">
                                     <p>Order notes</p>
                                     <input type="text" name="customer_note"
-                                        placeholder="Notes about your order, e.g. special notes for delivery.">
+                                        placeholder="Notes about your order, e.g. special notes for delivery." class="form-control">
                                 </div>
                             </div>
 
 
                         </div>
                 </div>
-                <div class="col-lg-6 text-second">
+                <div class="col-lg-3" id="order-details-container">
                         <h4>Your Order {{$date}}</h4>
-                        <div class="checkout__order__products">Products <span>Total</span></div>
+                        <div class="checkout__order__products">Products :</div>
                         <ul>
                             @foreach($cart_items as $item)
                                 @if($item->product->hasDiscount())  {{-- product has discount --}}
@@ -111,17 +116,17 @@
                                     ?>
                                 <li> {{$item->product->name_en}}
                                      @if($item->product->unit == 'gram')
-                                     <b style="color: #7fad39">{{$item->quantity/1000}} K.G </b> <span>{{$new_price * $item->quantity / 1000}} AED</span>
+                                     <b style="color: wheat">{{$item->quantity/1000}} K.G </b> <span>{{$new_price * $item->quantity / 1000}} AED</span>
                                      @else
-                                     <b style="color: #7fad39">{{$item->quantity}}  </b> <span>{{$new_price * $item->quantity}} AED</span>
+                                     <b style="color: wheat">{{$item->quantity}}  </b> <span>{{$new_price * $item->quantity}} AED</span>
                                      @endif
                                     </li>
                                 @else
                                 <li> {{$item->product->name_en}}
                                     @if($item->product->unit == 'gram')
-                                     <b style="color: #7fad39">{{$item->quantity/1000}} K.G </b> <span>{{$item->product->price * $item->quantity / 1000}} AED</span>
+                                     <b style="color: wheat">{{$item->quantity/1000}} K.G </b> <span>{{$item->product->price * $item->quantity / 1000}} AED</span>
                                     @else
-                                    <b style="color: #7fad39">{{$item->quantity}} </b> <span>{{$item->product->price * $item->quantity}} AED</span>
+                                    <b style="color: wheat">{{$item->quantity}} </b> <span>{{$item->product->price * $item->quantity}} AED</span>
                                     @endif
                                 </li>
                                 @endif
@@ -138,7 +143,7 @@
                               $order_grand_total = $total_order_price + $tax_value ;
                               $order_grand_total = number_format((float)$order_grand_total, 2, '.', '');
                         ?>
-                        <div class="checkout__order__total">Total <span>{{$order_grand_total}} AED</span></div>
+                        <div style="color: wheat" class="checkout__order__total"><b>Total <span>{{$order_grand_total}} AED</span></b></div>
                         <div class="checkout__input__checkbox">
                             <label for="cash">
                                 Cash Payment
@@ -155,20 +160,18 @@
                         </div>
                         <div>
                                 @if(is_numeric($hours_remaining_to_deliver))
-                                    <h4 style="color: #7fad39">
+                                    <h4 style="color: wheat">
                                     You will receive your order in about
                                     {{$hours_remaining_to_deliver}} Hours
                                     </h4>
                                 @else
-                                    <h4 style="color: #f44336">
+                                    <h4 style="color: #e4eef0">
                                     You will receive your order tomorrow
                                     </h4>
                                 @endif
                             <button type="submit" class="btn btn-success"><i class="fa-solid fa-check"></i> PLACE ORDER</button>
                     </div>
-
                 </form>
-
                 </div>
             </div>
     </div>

@@ -19,8 +19,25 @@ class ProductController extends Controller
         $category = Category::findOrFail($id);
         $categories = Category::all();
         $products = $category->products;
-        if($products->count() == 1) // enter the product directly
-            return view ('Customer.product.view',['product'=>$products->first()]);
+        if($products->count() == 1){ // enter the product directly
+            $exist_rate = false ;
+            $user_rate_value = 0 ;
+            $rate = $products->first()->rating();
+            $reviews = $products->first()->reviews();
+            if(Auth::user()){
+                $user_rate = ProductRate::where('product_id',$products->first()->id)->where('user_id',Auth::user()->id)->first();
+                if($user_rate){
+                    $exist_rate = true;
+                    $user_rate_value = $user_rate->value;
+                }
+                return view ('Customer.product.view',['product'=>$products->first(),'rate'=>$rate,'exist_rate'=>$exist_rate,'user_rate_val' => $user_rate_value,
+                                                      'reviews'=>$reviews]);
+            }
+            else{
+                return view('Customer.product.view', ['product'=>$products->first(),'rate'=>$rate ,'exist_rate'=>$exist_rate,'user_rate_val' => $user_rate_value,
+                                                      'reviews'=>$reviews]);
+            }
+        }
         else
             return view('Customer.index_by_category',['categories'=>$categories,'products'=>$products]);
     }
@@ -203,6 +220,8 @@ class ProductController extends Controller
     public function rateProduct(Request $request,$id){
         // check if not auth || rate this product before so we prevent the function of rating
         if(!Auth::user())
+            return back();
+        if($request->rate > 5 || $request->rate < 1)
             return back();
         $user = User::find(Auth::user()->id);
         $product = Product::findOrFail($id);

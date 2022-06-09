@@ -66,7 +66,7 @@ Route::group(['middleware'=>['is_employee']] , function(){
         Route::post('/employee/change/orderStatus/{order_id}',[App\Http\Controllers\Employee\OrderController::class, 'changeStatus'])->name('employee.change.order.status');
         Route::get('/print/delivery/order/{order_id}',[App\Http\Controllers\Employee\OrderController::class, 'printDeliveryOrder'])->name('print.delivery.order');
     });
-    
+
     Route::get('/check/new/orders',[App\Http\Controllers\Employee\OrderController::class, 'ajaxCheckNewOrders'])->name('check.new.orders');
 });
 
@@ -114,6 +114,4 @@ Route::get('/session', function(){
 
 // guest
 Route::get('/sign-up', [Controller::class, 'signUpForm'])->name('sign.up');
-
-
 });

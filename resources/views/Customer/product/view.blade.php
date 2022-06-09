@@ -23,6 +23,29 @@
          color: #622521;
          background-color: white;;
      }
+     .displaynone{
+         display: none;
+     }
+     #rate-div form{
+         display: flex;
+         justify-content: center;
+         padding: 25px;
+     }
+     #rate-btn{
+                background-color: rgb(255, 255, 255);
+                color: #622521;
+                font-weight: bold;
+                width: 50px;
+                height: 45px;
+                border: 1px solid #fff;
+                border-radius:4px;
+     }
+     .bi-star-fill:hover{
+         cursor: pointer;
+     }
+     .bi-star:hover{
+         cursor: pointer;
+     }
     @media only screen and (max-width: 600px) {
         .product-div {
             display: flex;
@@ -43,10 +66,16 @@
             <div style="display: flex; justify-content: space-around;" class="my-product-content">
 
                 <div style="display: flex; flex-direction: column">
+                    <div style="display: flex; justify-content: center">
+                    @for($k=1;$k<=$rate;$k++)
+                            <i style="color:wheat" class="fa fa-star"></i>
+                    @endfor
+                            <span>({{$reviews}} reviews)</span>
+                    </div>
                     <img src="{{ asset('storage/'.$product->image) }}" class="category_img" height="250px">
                 </div>
 
-                <div style="display: flex; flex-direction: column">
+                <div style="display: flex; flex-direction: column; padding:10px;">
                     <h3>{{ $product->description }}</h3>
                 @if($product->hasDiscount())  {{-- product has discount --}}
                                     <?php
@@ -69,7 +98,6 @@
                     {{--
                     <input style="display: none"  id="weight-in-gram" type='number' name='weight' value="{{$product->unit == 'gram' ? $product->min_weight : $product->min_weight}}" readonly/>
                     --}}
-
                     {{--
                     <div class="d-flex justify-content-center small text-warning mb-2">
                         <div class="bi-star-fill"></div>
@@ -79,7 +107,7 @@
                         <div class="bi-star-fill"></div>
                     </div>
                     --}}
-                    <div style="display: flex; justify-content: space-around">
+                    <div style="display: flex; justify-content: space-around; padding:20px;">
                         @if($product->availability)
                         <button id="add-to-cart" class="btn view-btn"> <i class="fa fa-cart-plus"></i> </button>
                         @else
@@ -97,6 +125,30 @@
                                 @endfor
                             </select>
                     </div>
+                    @if(Auth::user())
+                    @if(!$exist_rate)
+                        <div id="rate-div">
+                            <form action="{{route('rate.product',$product->id)}}" method="POST">
+                                @for($i=1;$i<=5;$i++)
+                                        @csrf
+                                        <div style="margin:10px; font-size:20px;" class="bi-star" id="empty-star-{{$i}}"></div>
+                                        <div style="margin:10px;font-size:20px;" class="bi-star-fill displaynone" id="star-{{$i}}"></div>
+                                @endfor
+                                <button class="star-btn" id="rate-btn" name="rate" value="{{0}}">
+                                    rate
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <li><b>Thanx for rating</b>
+                            <div style="display: flex; justify-content: center">
+                                @for($i=1;$i<=$user_rate_val;$i++)
+                                    <div style="margin:10px;font-size:20px;" class="bi-star-fill"></div>
+                                @endfor
+                            </div>
+                        </li>
+                    @endif
+                    @endif
                 </div>
             </div>
             <p class="lead fw-normal text-white-50 mb-0"> Dabbagh | دباغ</p>
@@ -155,12 +207,17 @@
         });
     });
 
-    $("[id^='star-btn-']").hover(function() {
-        var gold = $(this).attr('id').slice(9);  // number of star
-        for(var i = parseInt(gold) ; i >= 1 ; --i ){  // fill
+    $("[id^='empty-star']").on('click',function() {
+        var gold = $(this).attr('id').slice(11);
+        $('#rate-btn').val(gold);
+        for(var i = parseInt(gold) ; i >= 1 ; --i ){
             $('#empty-star-'+i).addClass('displaynone');
             $('#star-'+i).removeClass('displaynone');
         }
+    });
+    $("[id^='star']").on('click',function() {
+        var gold = $(this).attr('id').slice(5);
+        $('#rate-btn').val(gold);
         for( i = parseInt(gold)+1 ; i <= 5 ; ++i ){  // gaping
             $('#star-'+i).addClass('displaynone');
             $('#empty-star-'+i).removeClass('displaynone');
