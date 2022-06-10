@@ -91,7 +91,7 @@ Route::post('/delete/cart/content/{cart_id?}', [CartController::class, 'deleteCa
 
 Route::get('/checkout',[OrderController::class, 'checkout'])->name('checkout');
 Route::get('/checkout/guest',[OrderController::class, 'guestCheckout'])->name('checkout.guest');
-Route::post('/submit/order',[App\Http\Controllers\Customer\OrderController::class, 'submitOrder'])->name('submit.order');
+Route::post('/submit/order',[App\Http\Controllers\Customer\OrderController::class, 'submitOrder'])->name('submit.order')->middleware('submit_order');
 Route::post('/submit/order/as-guest',[App\Http\Controllers\Customer\OrderController::class, 'submitOrderAsGuest'])->name('submit.order.as.guest');
 Route::get('/my-orders',[App\Http\Controllers\Customer\OrderController::class, 'showMyOrders'])->name('my.orders');
 

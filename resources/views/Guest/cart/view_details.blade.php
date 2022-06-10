@@ -290,12 +290,12 @@
                             @if($min_order > $cart_grand_total)
                             <h4 id="min-order-warning">You can't submit order by less than {{$min_order}} AED</h4>
                             <div id="proceed-to-checkout-div" class="displaynone">
-                            <button id="proceed-to-checkout"><i class="fa-solid fa-money-check"></i></button>
+                            <button id="proceed-to-checkout" class="primary-button"><i class="fa-solid fa-money-check"></i></button>
                             </div>
                             @else
                             <h4 id="min-order-warning" class="displaynone">You can't submit order by less than {{$min_order}} AED</h4>
                             <div id="proceed-to-checkout-div">
-                            <button id="proceed-to-checkout"><i class="fa-solid fa-money-check"></i></button>
+                            <button id="proceed-to-checkout" class="primary-button"><i class="fa-solid fa-money-check"></i></button>
                             </div>
                             @endif
                         @endif

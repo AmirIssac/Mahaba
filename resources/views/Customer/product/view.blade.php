@@ -157,6 +157,20 @@
 </header>
 @section('scripts')
 <script>
+
+function addToCartNotification(from, align){
+        color = 'success';
+        $.notify({
+            message: "Successfully added to cart"
+        },{
+            type: color,
+            timer: 20,
+            placement: {
+                from: from,
+                align: align
+            }
+        });
+    }
         /*function addToCart(){*/
     $('document').ready(function(){
         $('#add-to-cart').on('click',function(){
@@ -174,7 +188,7 @@
                 //dataType: 'json',
                 success: function(data){    // data is the response come from controller
                     if(data == 'success')
-                        alert('added successfully');
+                        addToCartNotification('top','center');
                 }
             }); // ajax close
         });
@@ -223,6 +237,7 @@
             $('#empty-star-'+i).removeClass('displaynone');
         }
     });
+
 </script>
 @endsection
 @endsection
