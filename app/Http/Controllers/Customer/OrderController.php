@@ -22,17 +22,17 @@ use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
-    public function checkout(Request $request){
+    public function checkout(){
         $user = User::findOrFail(Auth::user()->id);
         $profile = $user->profile;
         // validate points
-            $points_applied = $request->points_applied;
-            $user_max_points = $user->maxAppliedPoints();
+            //$points_applied = $request->points_applied;
+            //$user_max_points = $user->maxAppliedPoints();
             $one_percent_discount = Setting::where('key','one_percent_discount_by_points')->first()->value;
-            if($points_applied > $user_max_points || $points_applied % $one_percent_discount != 0)
-                return abort(403);
+            //if($points_applied > $user_max_points || $points_applied % $one_percent_discount != 0)
+                //return abort(403);
         // save points applied to session
-        Session::put('points_applied',$points_applied);
+        //Session::put('points_applied',$points_applied);
         $cart = $user->cart;
         $hours_remaining_to_deliver = $cart->calculateDeliverTime();
         $cart_items = $cart->cartItems;

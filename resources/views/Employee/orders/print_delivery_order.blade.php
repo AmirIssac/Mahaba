@@ -12,7 +12,7 @@
         font-size: 12px;
         font-family: 'Times New Roman';
     }
-    
+
     td,
     th,
     tr,
@@ -20,37 +20,37 @@
         border-top: 1px solid black;
         border-collapse: collapse;
     }
-    
+
     td.description,
     th.description {
         width: 75px;
         max-width: 75px;
     }
-    
+
     td.quantity,
     th.quantity {
         width: 40px;
         max-width: 40px;
         word-break: break-all;
     }
-    
+
     td.price,
     th.price {
         width: 40px;
         max-width: 40px;
         word-break: break-all;
     }
-    
+
     .centered {
         text-align: center;
         align-content: center;
     }
-    
+
     .ticket {
         width: 155px;
         max-width: 155px;
     }
-    
+
     img {
         max-width: inherit;
         width: inherit;
@@ -66,7 +66,7 @@
     </style>
     <body>
         <div class="ticket">
-            <img src="{{asset('img/logo.png')}}" alt="Logo">
+            <img src="{{asset('images/logo.png.png')}}" alt="Logo">
             <p class="centered">{{$store}}
                 <br>{{$order->first_name}} {{$order->last_name}}
                 <br>{{$order->phone}}
@@ -130,15 +130,6 @@
             <p class="centered">Thanks for chosing DabbaghFoods
                 <br>www.dabbaghfoods.com</p>
         </div>
-        {{--
-        <button id="btnPrint" class="hidden-print">Print</button>
-        <script>
-            const $btnPrint = document.querySelector("#btnPrint");
-            $btnPrint.addEventListener("click", () => {
-                window.print();
-            });
-        </script>
-        --}}
         <script>
             // self executing function here
             (function() {

@@ -153,7 +153,7 @@
                         </div>
                         <div class="checkout__input__checkbox">
                             <label for="online">
-                                Other
+                                Card
                                 <input type="radio" name="payment_method" value="other" id="online">
                                 <span class="checkmark"></span>
                             </label>

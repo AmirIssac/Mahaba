@@ -179,7 +179,9 @@
                                     {{--
                                 <a href="{{route('checkout')}}" class="primary-btn">PROCEED TO CHECKOUT</a>
                                     --}}
+                                    {{--
                                 <input type="hidden" name="points_applied" id="points-input">
+                                --}}
                                 <button class="btn btn-success"><i class="fa-solid fa-money-check"></i> Proceed To Checkout</button>
                                 </div>
                             </form>
