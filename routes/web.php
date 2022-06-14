@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\InventoryController as AdminInventoryController;
 use App\Http\Controllers\Customer\ProductController as ProductController;
 use App\Http\Controllers\Customer\CartController as CartController;
 use App\Http\Controllers\Admin\UserContoller as UserDashboardContoller;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -57,7 +58,7 @@ Route::get('/login-form',function(){
 */
 
 // Employee
-Route::group(['middleware'=>['is_employee']] , function(){
+Route::group(['middleware'=>['auth','is_employee']] , function(){
     Route::get('/dashboard',[Controller::class, 'adminDashboard'])->name('dashboard')->middleware('auth');
     Route::get('/employee/orders',[App\Http\Controllers\Employee\OrderController::class, 'index'])->name('employee.orders');
     Route::group(['middleware'=>['employee_order_access']] , function(){
@@ -76,35 +77,28 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 // customer
-Route::get('/by-category/{category_id}', [ProductController::class, 'indexByCategory'])->name('index.by.category');
-Route::get('/search', [ProductController::class, 'search'])->name('search');
-Route::get('/product/{product_id}', [ProductController::class, 'viewProduct'])->name('view.product');
-Route::post('/add/product/toCart/{product_id}', [ProductController::class, 'addProductToCart'])->name('add.product.to.cart');
-Route::post('/add/product/toFavorite/{product_id}', [ProductController::class, 'ProductToFavorite'])->name('add.product.to.favorite');
-Route::post('/remove/product/fromFavorite/{product_id}', [ProductController::class, 'removeFromFavorite'])->name('remove.product.from.favorite'); // for deleting from favorite view without ajax
-Route::post('/update/product/inCart/{product_id}', [ProductController::class, 'updateProductCart'])->name('update.product.in.cart');
-Route::get('/view/my-cart', [CartController::class, 'viewCart'])->name('view.cart');
-Route::get('/view/my-favorite', [ProfileController::class, 'viewFavorite'])->name('view.favorite');
-Route::get('/view/guest-cart', [CartController::class, 'viewGuestCart'])->name('view.guest.cart');
-Route::post('/delete/cart/item/{cart_item}', [CartController::class, 'deleteCartItem'])->name('delete.cart.item');
-Route::post('/delete/cart/content/{cart_id?}', [CartController::class, 'deleteCartContent'])->name('delete.cart.content');
+Route::group(['middleware'=>['auth']] , function(){
+    Route::post('/add/product/toFavorite/{product_id}', [ProductController::class, 'ProductToFavorite'])->name('add.product.to.favorite');
+    Route::post('/remove/product/fromFavorite/{product_id}', [ProductController::class, 'removeFromFavorite'])->name('remove.product.from.favorite'); // for deleting from favorite view without ajax
+    Route::get('/view/my-cart', [CartController::class, 'viewCart'])->name('view.cart');
+    Route::get('/view/my-favorite', [ProfileController::class, 'viewFavorite'])->name('view.favorite');
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    //Route::get('/checkout/guest',[OrderController::class, 'guestCheckout'])->name('checkout.guest');
+    Route::post('/submit/order', [App\Http\Controllers\Customer\OrderController::class, 'submitOrder'])->name('submit.order')->middleware('submit_order');
+    //Route::post('/submit/order/as-guest',[App\Http\Controllers\Customer\OrderController::class, 'submitOrderAsGuest'])->name('submit.order.as.guest');
+    Route::get('/my-orders', [App\Http\Controllers\Customer\OrderController::class, 'showMyOrders'])->name('my.orders');
+    Route::get('/my-profile', [ProfileController::class, 'myProfile'])->name('my.profile');
+    Route::post('/submit/profile', [ProfileController::class, 'submitProfile'])->name('submit.profile');
+    Route::post('rate/product/{product_id}', [ProductController::class, 'rateProduct'])->name('rate.product');
+});
 
-Route::get('/checkout',[OrderController::class, 'checkout'])->name('checkout');
-Route::get('/checkout/guest',[OrderController::class, 'guestCheckout'])->name('checkout.guest');
-Route::post('/submit/order',[App\Http\Controllers\Customer\OrderController::class, 'submitOrder'])->name('submit.order')->middleware('submit_order');
-Route::post('/submit/order/as-guest',[App\Http\Controllers\Customer\OrderController::class, 'submitOrderAsGuest'])->name('submit.order.as.guest');
-Route::get('/my-orders',[App\Http\Controllers\Customer\OrderController::class, 'showMyOrders'])->name('my.orders');
 
 Route::group(['middleware'=>['customer_order_check']] , function(){
     Route::get('/order/details/{order_id}',[App\Http\Controllers\Customer\OrderController::class, 'details'])->name('order.details');
     Route::get('/view/order/{order_id}',[App\Http\Controllers\Customer\OrderController::class, 'viewOrder'])->name('view.order');
 });
 
-Route::get('/my-profile',[ProfileController::class, 'myProfile'])->name('my.profile');
-Route::post('/submit/profile',[ProfileController::class, 'submitProfile'])->name('submit.profile');
 
-
-Route::post('rate/product/{product_id}',[ProductController::class, 'rateProduct'])->name('rate.product');
 
 // display session
 Route::get('/session', function(){
@@ -115,3 +109,15 @@ Route::get('/session', function(){
 // guest
 Route::get('/sign-up', [Controller::class, 'signUpForm'])->name('sign.up');
 });
+Route::get('/by-category/{category_id}', [ProductController::class, 'indexByCategory'])->name('index.by.category');
+Route::get('/filter', [ProductController::class, 'filter'])->name('filter');
+Route::get('/product/{product_id}', [ProductController::class, 'viewProduct'])->name('view.product');
+Route::get('/view/guest-cart', [CartController::class, 'viewGuestCart'])->name('view.guest.cart');
+Route::post('/add/product/toCart/{product_id}', [ProductController::class, 'addProductToCart'])->name('add.product.to.cart');
+Route::post('/delete/cart/item/{cart_item}', [CartController::class, 'deleteCartItem'])->name('delete.cart.item');
+Route::post('/delete/cart/content/{cart_id?}', [CartController::class, 'deleteCartContent'])->name('delete.cart.content');
+//Route::post('/update/product/inCart/{product_id}', [ProductController::class, 'updateProductCart'])->name('update.product.in.cart');
+
+Route::get('/contact-us', [ContactController::class, 'contactUs'])->name('contact.us');
+Route::post('/store-contact-form', [ContactController::class, 'storeContactForm'])->name('store.contact.form');
+

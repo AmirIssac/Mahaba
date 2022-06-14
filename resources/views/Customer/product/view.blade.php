@@ -113,7 +113,9 @@
                         @else
                         <button id="add-to-cart" class="btn btn-danger" disabled> <i class="fa fa-cart-plus"></i> </button>
                         @endif
+                        {{--
                         <button id="favorite-btn" class="btn view-btn"><i class="fa-solid fa-heart-circle-plus"></i> </button>
+                        --}}
                             <select id="weight-in-gram">
                                 <?php $quantity = $product->min_weight / 1000 ;
                                       $increasing = $product->increase_by / 1000 ;

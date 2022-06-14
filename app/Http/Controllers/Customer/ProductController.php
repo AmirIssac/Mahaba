@@ -42,13 +42,37 @@ class ProductController extends Controller
             return view('Customer.index_by_category',['categories'=>$categories,'products'=>$products]);
     }
 
-    public function search(Request $request){
+    public function filter(Request $request){
         $categories = Category::all();
+        $min = $request->price_min;
+        $max = $request->price_max;
         $products = Product::where(function($query) use ($request){
             $query->where('name_en','like','%'.$request->search.'%')
             ->orWhere('name_ar','like','%'.$request->search.'%');
-        })->get();
-        return view('index',['categories'=>$categories,'products'=>$products]);
+            })
+            ->whereIn('category_id', $request->categories)
+            ->whereBetween('price',array($min,$max))
+            ->get();
+        // price filter on products
+        foreach($products as $key => $value){
+             //return $products[$key];
+             //$products->forget($key);
+             if($products[$key]->hasDiscount()){
+                if($products[$key]->isPercentDiscount()){
+                    $discount = $products[$key]->price * $products[$key]->discount->value / 100;
+                    $new_price = $products[$key]->price - $discount;
+                }
+                else
+                    $new_price = $products[$key]->price - $products[$key]->discount->value;
+                if($new_price < $min || $new_price > $max)
+                    $products->forget($key);  // delete the item from the collection
+             } // end hasDiscount condition
+             else{  // no Discount
+                if($products[$key]->price < $min || $products[$key]->price > $max)
+                    $products->forget($key);  // delete the item from the collection
+             }
+        }
+        return view('Customer.index_by_category',['categories'=>$categories,'products'=>$products]);
     }
 
     public function viewProduct($id){

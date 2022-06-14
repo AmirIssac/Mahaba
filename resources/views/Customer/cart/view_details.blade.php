@@ -151,9 +151,9 @@
     <div class="container">
         <div class="text-center text-white product-div">
             <div class="row bg-second">
-                <div class="col-lg-6 text-second">
+                <div class="col-lg-12 text-second">
                     <div style="background-color: #f5ebeb" id="checkout-box">
-                        <h5>Cart Total</h5>
+                        <h5><b>Cart Total</b></h5>
                         <input type="hidden" value="{{$tax}}" id="tax">
                         <ul>
                             <li>Subtotal <span id="cart-subtotal">{{$cart_total}} AED</span></li>
@@ -162,7 +162,7 @@
                                 $cart_grand_total = $cart_total + $tax_value ;
                                 $cart_grand_total = number_format((float)$cart_grand_total, 2, '.', '');
                             ?>
-                            <li>Total <span id="cart-total">{{$cart_grand_total}} AED</span></li>
+                            <h3><b><li>Total <span id="cart-total">{{$cart_grand_total}} AED</span></li></b></h3>
                         </ul>
                         <input type="hidden" id="min-order-val" value="{{$min_order}}">
                         @if(Auth::user())
