@@ -176,12 +176,28 @@
                   <td> <input type="number" name="min_weight" class="form-control"> </td>
                   <td> <input type="number" name="increase_by" class="form-control"> </td>
                   <td>
+                    {{--
                     <select name="options[]" class="form-control" multiple>
                       @foreach($options as $option)
                         <option value="{{$option->id}}">{{$option->name_en}}</option>
                       @endforeach
                     </select>
+                    --}}
                   </td>
+                </tr>
+                <tr>
+                    @foreach($attributes as $attribute)
+                        <th>
+                            {{ $attribute->name_ar }}
+                            <select class="form-control" name="attribute_values[]" multiple>
+                                @foreach($attribute->attributeValues as $attribute_value)
+                                            <option value="{{ $attribute_value->id }}">
+                                                {{ $attribute_value->value }}  +{{ $attribute_value->price }}
+                                            </option>
+                                @endforeach
+                            </select>
+                        </th>
+                    @endforeach
                 </tr>
                 <tr>
                     <th>
@@ -390,7 +406,7 @@
                 </tr>
               </tbody>
             </table>
-            
+
           </div>
         </div>
       </div>

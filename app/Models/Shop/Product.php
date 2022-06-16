@@ -2,6 +2,7 @@
 
 namespace App\Models\Shop;
 
+use App\Models\AttributeValue;
 use App\Models\Option;
 use App\Models\ProductRate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -61,9 +62,9 @@ class Product extends Model
         return $this->hasMany(ProductRate::class);
     }
 
-    public function options()
+    public function attributeValues()
     {
-        return $this->belongsToMany(Option::class);
+        return $this->belongsToMany(AttributeValue::class);
     }
 
     /*
@@ -107,7 +108,7 @@ class Product extends Model
         else
             return false;
     }
-    
+
     public function getSavedMoney(){   // وفر
         if($this->isPercentDiscount()){
             $discount = $this->price * $this->discount->value / 100 ;

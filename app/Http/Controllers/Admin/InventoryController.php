@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Option;
+use App\Models\Attribute;
 use App\Models\Shop\Category;
 use App\Models\Shop\Discount;
 use App\Models\Shop\Product;
@@ -19,9 +19,10 @@ class InventoryController extends Controller
         $products = Product::orderBy('updated_at','DESC')->simplePaginate(10);
         $categories = Category::all();
         $discounts = Discount::all();
-        $options = Option::all();
+        //$options = Option::all();
+        $attributes = Attribute::with('attributeValues')->get();
         return view('Admin.Inventory.index',['products'=>$products,'categories'=>$categories,'discounts'=>$discounts,
-                                             'options' => $options]);
+                                             'attributes'=>$attributes]);
     }
 
     public function storeProduct(Request $request){
@@ -62,7 +63,13 @@ class InventoryController extends Controller
                 }
         }
         // add options for this product (pivot table)
+        /*
         $product->options()->attach($request->options);
+        */
+
+        // add additional attributes
+        $attribute_values = $request->attribute_values;
+        $product->attributeValues()->attach($attribute_values);
         return back();
     }
 
@@ -119,7 +126,7 @@ class InventoryController extends Controller
         return back();
     }
 
-    public function storeNewDiscount(Request $request){       
+    public function storeNewDiscount(Request $request){
         $active = true;
         if(now() > $request->expired_at)
             $active = false;
@@ -129,14 +136,14 @@ class InventoryController extends Controller
             'active' => $active,
             'expired_at' => $request->expired_at,
         ]);
-        
+
         foreach($request->apply_discount_on_products as $product_id){
                 $product = Product::find($product_id);
                 $product->update([
                     'discount_id' => $discount->id,
                 ]);
         }
-        
+
         return back();
 
     }
@@ -164,7 +171,7 @@ class InventoryController extends Controller
         ]);
         // update products
         $old_products_discounted = Product::whereHas('discount',function($q) use ($discount){
-          $q->where('id',$discount->id);  
+          $q->where('id',$discount->id);
         })->get();
         $new_products_selected = $request->apply_discount_on_products;
         foreach($old_products_discounted as $old_product){

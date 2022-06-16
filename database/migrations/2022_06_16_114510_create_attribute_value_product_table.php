@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOptionProductTable extends Migration
+class CreateAttributeValueProductTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateOptionProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('option_product', function (Blueprint $table) {  // pivot table
+        Schema::create('attribute_value_product', function (Blueprint $table) { // pivot table
             $table->id();
-            $table->unsignedBigInteger('option_id')->unsigned();
-            $table->foreign('option_id')->references('id')->on('options');//onDelete('set null');
+            $table->unsignedBigInteger('attribute_value_id')->unsigned();
+            $table->foreign('attribute_value_id')->references('id')->on('attribute_values');//onDelete('set null');
             $table->unsignedBigInteger('product_id')->unsigned();
             $table->foreign('product_id')->references('id')->on('products');//onDelete('set null');
             $table->timestamps();
@@ -30,6 +30,6 @@ class CreateOptionProductTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('option_product');
+        Schema::dropIfExists('attribute_value_product');
     }
 }

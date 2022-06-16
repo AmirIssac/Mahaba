@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attribute;
 use App\Models\ProductRate;
 use App\Models\Shop\CartItem;
 use App\Models\Shop\Category;
@@ -76,7 +77,8 @@ class ProductController extends Controller
     }
 
     public function viewProduct($id){
-        $product = Product::findOrFail($id);
+        $product = Product::with('attributeValues.attribute')->findOrFail($id);
+        $attributes_list = Attribute::get();
         $exist_rate = false ;
         $user_rate_value = 0 ;
         $rate = $product->rating();
@@ -88,11 +90,11 @@ class ProductController extends Controller
                 $user_rate_value = $user_rate->value;
             }
             return view ('Customer.product.view',['product'=>$product,'rate'=>$rate,'exist_rate'=>$exist_rate,'user_rate_val' => $user_rate_value,
-                                                  'reviews'=>$reviews]);
+                                                  'reviews'=>$reviews,'attributes_list'=>$attributes_list]);
         }
         else{
             return view ('Customer.product.view',['product'=>$product,'rate'=>$rate ,'exist_rate'=>$exist_rate,'user_rate_val' => $user_rate_value,
-                                                  'reviews'=>$reviews]);
+                                                  'reviews'=>$reviews,'attributes_list'=>$attributes_list]);
         }
     }
 

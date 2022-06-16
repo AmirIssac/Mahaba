@@ -15,13 +15,13 @@ class CategoriesSeeder extends Seeder
     public function run()
     {
         Category::create([
-            'name_en' => 'Whole Lamb',
-            'name_ar' => 'خاروف كامل',
+            'name_en' => 'Whole Live',
+            'name_ar' => 'كامل حي',
         ]);
 
         Category::create([
-            'name_en' => 'Whole Lamb Cuts',
-            'name_ar' => 'مقطعات الخاروف',
+            'name_en' => 'cuts and seasonings',
+            'name_ar' => 'مقطعات وتبلات',
         ]);
     }
 }

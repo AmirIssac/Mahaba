@@ -203,6 +203,17 @@
                                 </select>
                             </span>
                     </div>
+
+
+                    <div>
+                        @foreach($attributes_list as $attribute)
+                        @foreach($product->attributeValues as $attribute_value)
+                            {{ $attribute_value->value }}
+                        @endforeach
+                        @endforeach
+                    </div>
+
+
                     @if(Auth::user())
                     @if(!$exist_rate)
                         <div id="rate-div">

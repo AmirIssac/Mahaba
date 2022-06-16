@@ -2,6 +2,7 @@
 
 namespace App\Models\Shop;
 
+use App\Models\AttributeValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,6 +24,10 @@ class CartItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+    public function attributeValues()
+    {
+        return $this->belongsToMany(AttributeValue::class);
     }
 
 }

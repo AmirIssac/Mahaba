@@ -17,6 +17,8 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->string('name_en');
             $table->string('name_ar');
+            //$table->enum('unit',['weight','piece']);
+            $table->string('image')->nullable()->default(null);
             $table->timestamps();
         });
     }
