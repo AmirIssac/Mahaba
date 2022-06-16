@@ -176,7 +176,7 @@
                                 <input type="hidden" value="{{$item->id}}" id="product{{$counter}}">
                                 <tr>
                                     <td>
-                                        <img src="{{asset('storage/'.$item->image)}}" alt="" height="75px">
+                                        <img src="{{asset('storage/'.$item->image)}}" alt="" class="product-image">
                                         <h5>{{$item->name_en}}</h5>
                                     </td>
                                     <td>
@@ -219,10 +219,12 @@
                                         @endif
                                     </td>
                                     <td>
+                                        {{--
                                         <form action="{{route('delete.cart.item',$item->id)}}" method="POST">
                                             @csrf
                                             <button style="border: none; background-color: transparent" class="btn btn-danger" onclick="javascript:this.form.submit();"><i class="fa-solid fa-delete-left"></i></button>
                                         </form>
+                                        --}}
                                     </td>
                                 </tr>
                                 <?php $counter++; ?>

@@ -1,4 +1,9 @@
 @extends('Layouts.main')
+@section('meta')
+{{--
+<div class="col-md-6"> {!! htmlFormSnippet() !!} </div>
+--}}
+@endsection
 @section('body')
     <div class="container">
 
@@ -142,8 +147,13 @@
 
                             </div>
 
-
-
+                            {!! ReCaptcha::htmlScriptTagJsApi() !!}
+                            <div class="col-md-6"> {!! htmlFormSnippet() !!} </div>
+                            @if ($errors->has('g-recaptcha-response'))
+                            <span class="text-danger">
+                            <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
+                            </span>
+                            @endif
                             <div class="form-group text-center">
 
                                 <button class="btn btn-success btn-submit">Send</button>

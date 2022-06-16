@@ -16,28 +16,17 @@ class ContactController extends Controller
     {
 
         $request->validate([
-
             'name' => 'required',
-
             'email' => 'required|email',
-
             'phone' => 'required|digits:10|numeric',
-
             'subject' => 'required',
-
             'message' => 'required',
-
+            'g-recaptcha-response' => 'required|recaptcha',
         ]);
-
-
 
         $input = $request->all();
 
-
-
         Contact::create($input);
-
-
 
         //  Send mail to admin
 

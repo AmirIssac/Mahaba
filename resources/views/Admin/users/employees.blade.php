@@ -7,7 +7,7 @@
     <div class="col-md-12 ml-auto mr-auto">
       <div class="card card-upgrade">
         <div class="card-header text-center">
-          <h4 class="card-title">Employees <span class="badge badge-primary"> {{$employees->count()}} </span> </h3>
+          <h4 class="card-title"><b style="color: #fa7a50">Employees  {{$employees->count()}} </h3>
             <p class="card-category"></p>
         </div>
         <div class="card-body">

@@ -46,6 +46,81 @@
      .bi-star:hover{
          cursor: pointer;
      }
+
+    /* select style */
+    .small {
+    font-size: .8em;
+    }
+
+    .square {
+    width: .7em;
+    height: .7em;
+    margin: .5em;
+    display: inline-block;
+    }
+
+    /* Custom dropdown */
+    .custom-dropdown {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    }
+
+    .custom-dropdown select {
+    background-color: wheat;
+    color: #622521;
+    font-size: inherit;
+    padding: .5em;
+    padding-right: 2.5em;
+    border: 0;
+    margin: 0;
+    border-radius: 3px;
+    text-indent: 0.01px;
+    text-overflow: '';
+    -webkit-appearance: button; /* hide default arrow in chrome OSX */
+    }
+
+    .custom-dropdown::before,
+    .custom-dropdown::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    }
+
+    .custom-dropdown::after { /*  Custom dropdown arrow */
+    content: "\25BC";
+    height: 1em;
+    font-size: .625em;
+    line-height: 1;
+    right: 1.2em;
+    top: 50%;
+    margin-top: -.5em;
+    }
+
+    .custom-dropdown::before { /*  Custom dropdown arrow cover */
+    width: 2em;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 0 3px 3px 0;
+    }
+
+    .custom-dropdown select[disabled] {
+    color: rgba(0,0,0,.3);
+    }
+
+    .custom-dropdown select[disabled]::after {
+    color: rgba(0,0,0,.1);
+    }
+
+    .custom-dropdown::before {
+    background-color: rgba(0,0,0,.15);
+    }
+
+    .custom-dropdown::after {
+    color: rgba(0,0,0,.4);
+    }
+
     @media only screen and (max-width: 600px) {
         .product-div {
             display: flex;
@@ -64,7 +139,6 @@
         <div class="text-center text-white product-div">
             <h1 class="display-4 fw-bolder text-prim">{{ $product->name_en }}</h1>
             <div style="display: flex; justify-content: space-around;" class="my-product-content">
-
                 <div style="display: flex; flex-direction: column">
                     <div style="display: flex; justify-content: center">
                     @for($k=1;$k<=$rate;$k++)
@@ -109,23 +183,25 @@
                     --}}
                     <div style="display: flex; justify-content: space-around; padding:20px;">
                         @if($product->availability)
-                        <button id="add-to-cart" class="btn view-btn"> <i class="fa fa-cart-plus"></i> </button>
+                        <button id="add-to-cart" class="btn view-btn"> <i class="fa fa-cart-plus"></i></button>
                         @else
                         <button id="add-to-cart" class="btn btn-danger" disabled> <i class="fa fa-cart-plus"></i> </button>
                         @endif
                         {{--
                         <button id="favorite-btn" class="btn view-btn"><i class="fa-solid fa-heart-circle-plus"></i> </button>
                         --}}
-                            <select id="weight-in-gram">
-                                <?php $quantity = $product->min_weight / 1000 ;
+                            <span class="custom-dropdown small">
+                                <select id="weight-in-gram">
+                                    <?php $quantity = $product->min_weight / 1000 ;
                                       $increasing = $product->increase_by / 1000 ;
                                       $loop_counter = 1 ;
-                                ?>
-                                @for($i=$quantity ; $loop_counter <= 12 ; $i+=$increasing)
-                                    <option value="{{ $i * 1000 }}">{{ $i }} K.G</option>
-                                    <?php $loop_counter++ ?>
-                                @endfor
-                            </select>
+                                    ?>
+                                    @for($i=$quantity ; $loop_counter <= 12 ; $i+=$increasing)
+                                        <option value="{{ $i * 1000 }}">{{ $i }} K.G</option>
+                                        <?php $loop_counter++ ?>
+                                    @endfor
+                                </select>
+                            </span>
                     </div>
                     @if(Auth::user())
                     @if(!$exist_rate)

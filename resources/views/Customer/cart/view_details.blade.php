@@ -162,7 +162,7 @@
                                 $cart_grand_total = $cart_total + $tax_value ;
                                 $cart_grand_total = number_format((float)$cart_grand_total, 2, '.', '');
                             ?>
-                            <h3><b><li>Total <span id="cart-total">{{$cart_grand_total}} AED</span></li></b></h3>
+                            <li><h3><b>Total <span id="cart-total">{{$cart_grand_total}} AED</span></b></h3></li>
                         </ul>
                         <input type="hidden" id="min-order-val" value="{{$min_order}}">
                         @if(Auth::user())

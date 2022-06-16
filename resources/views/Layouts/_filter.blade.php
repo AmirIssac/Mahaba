@@ -8,12 +8,12 @@
 <form action="{{ route('filter') }}" method="GET">
     @csrf
 <div class="col mb-5">
-    <div class="card h-100 product-container">
+    <div class="card h-100" style="background-color: #e4eef0; color: #622521">
             <div class="badge sale-badge position-absolute" style="top: 0.5rem; right: 0.5rem">Filter</div>
         <div class="card-body p-4">
             <div class="text-center">
                 <label>Search</label>
-                <input type="search" name="search" class="input-search">
+                <input type="search" name="search" class="input-search" placeholder="name...">
                 <hr>
                 <div style="display: flex; flex-direction: column">
                     <label>Category</label>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contact;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
@@ -82,5 +83,15 @@ class SettingController extends Controller
             'value' => $request->purchase_value_to_add_points ,
         ]);
         return back();
+    }
+
+    public function showMessages(){
+        $messages = Contact::simplePaginate(15);
+        return view('Admin.settings.messages',['messages'=>$messages]);
+    }
+
+    public function viewMessage($id){
+        $message = Contact::find($id);
+        return view('Admin.settings.view_message',['message'=>$message]);
     }
 }

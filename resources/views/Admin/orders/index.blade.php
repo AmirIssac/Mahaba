@@ -15,8 +15,8 @@
     <div class="col-md-12 ml-auto mr-auto">
       <div class="card card-upgrade">
         <div class="card-header text-center">
-          <h4 class="card-title">Orders <span class="badge badge-primary radius-span"> {{$orders_count}} </span>
-          </h4>
+          <h3 class="card-title"><b style="color: #fa7a50">Orders {{$orders_count}}</b>
+          </h3>
           <h4 class="card-title">
           Pending <span class="badge badge-danger radius-span"> {{$status_arr['pending']}} </span>
           preparing <span class="badge badge-info radius-span"> {{$status_arr['preparing']}} </span>

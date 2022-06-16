@@ -16,7 +16,6 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <link rel="apple-touch-icon" sizes="76x76" href="{{asset('dashboard_asset/img/apple-icon.png')}}">
@@ -36,7 +35,6 @@
   <link href="{{asset('dashboard_asset/demo/demo.css')}}" rel="stylesheet" />
   @yield('links')
 </head>
-
 <body class="">
   <div class="wrapper ">
     <div class="sidebar" data-color="orange">
@@ -123,7 +121,7 @@
           </button>
           <div class="collapse navbar-collapse justify-content-end" id="navigation">
             <ul class="navbar-nav">
-             
+
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdownAccountLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="now-ui-icons users_single-02"></i>
@@ -133,6 +131,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownAccountLink">
                   <a class="dropdown-item" href="/">Website</a>
+                  <a class="dropdown-item" href="{{ route('dashboard.messages') }}">Messages</a>
                   <form action="{{route('logout')}}" method="POST">
                     @csrf
                   <button class="dropdown-item">Logout</button>
