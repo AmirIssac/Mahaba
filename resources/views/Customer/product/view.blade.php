@@ -204,15 +204,31 @@
                             </span>
                     </div>
 
-
                     <div>
                         @foreach($attributes_list as $attribute)
-                        @foreach($product->attributeValues as $attribute_value)
-                            {{ $attribute_value->value }}
-                        @endforeach
+                        {{ $attribute->name_ar }}
+                        <br>
+                        {{--
+                        <span class="custom-dropdown small">
+                        <select name="attribute_values[]">
+                            @foreach($product->attributeValues as $attribute_value)
+                                @if($attribute_value->attribute_id == $attribute->id)
+                                   <option value="{{ $attribute_value->value }}"> {{ $attribute_value->value }} </option>
+                                @endif
+                            @endforeach
+                        </select>
+                        </span>
+                        --}}
+                        <br>
+                            @foreach($product->attributeValues as $attribute_value)
+                                    @if($attribute_value->attribute_id == $attribute->id)
+                                        {{ $attribute_value->value }}+{{ $attribute_value->price }}
+                                        <input type="checkbox" name="attribute_values[]" class="attribute_values" value="{{ $attribute_value->id }}">
+                                    @endif
+                            @endforeach
+                        <br>
                         @endforeach
                     </div>
-
 
                     @if(Auth::user())
                     @if(!$exist_rate)
@@ -267,15 +283,21 @@ function addToCartNotification(from, align){
            var product_id = {!! json_encode($product->id, JSON_HEX_TAG) !!};
             //var qty = parseInt($('#quantity-input').val());
             var qty = parseInt($('#weight-in-gram').val());
+           // var attribute_values = $('.attribute_values').val();
+           //alert($('input[name="attribute_values[]"]:checked').serialize());
+           // all attribute values checked
+           var attribute_values = $('input[name="attribute_values[]"]:checked').serialize();
+            //alert(attribute_values);
             $.ajax({
                 headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 type: "post",
                 url: '/add/product/toCart/'+product_id,
-                data : { quantity : qty },
+                data : { quantity : qty , attribute_values : attribute_values },
                 //dataType: 'json',
                 success: function(data){    // data is the response come from controller
+                    alert(data);
                     if(data == 'success')
                         addToCartNotification('top','center');
                 }

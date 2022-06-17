@@ -124,6 +124,12 @@ class ProductController extends Controller
 
     public function addProductToCart(Request $request,$id){
         $product = Product::findOrFail($id);
+        $attribute_values_jquery_serialized = $request->attribute_values;
+        $attribute_values = array();
+        //foreach($attribute_values as $value)
+            //return $value->value;
+        return parse_str($attribute_values_jquery_serialized, $attribute_values);
+        //return unserialize($attribute_values_jquery_serialized);
         //$user = User::findOrFail(Auth::user()->id);
         if(Auth::user()){     // logged user
                 $user = User::findOrFail(Auth::user()->id);
