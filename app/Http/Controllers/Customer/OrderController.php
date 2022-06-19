@@ -129,7 +129,7 @@ class OrderController extends Controller
         $estimated_time = $cart->calculateDeliverTime(true);
 
         DB::beginTransaction();
-        try{
+       // try{
                 $store_id = Store::first()->id;  // mahaba
                 $order = Order::create([
                     'user_id' => $user->id ,
@@ -164,6 +164,7 @@ class OrderController extends Controller
                         'price' => $order_item['price'] ,
                         'discount' => $order_item['discount'] ,
                         'quantity' => $order_item['quantity'] ,
+                        'item_attributes' => $order_item['attribute_values'],
                     ]);
                 }
                 // create discount
@@ -189,14 +190,17 @@ class OrderController extends Controller
                 }
                 // delete items from cart
                 foreach($cart_items as $cart_item){
+                        foreach($cart_item->attributeValues as $attr_val)
+                            $cart_item->attributeValues()->detach($attr_val->id); // remove all attr for the cart_item
+
                         $cart_item->delete();
                 }
                 DB::commit();
-        }
-        catch(\Exception $e) {
-            DB::rollback();
-            return 'opss something gone wrong !';
-        }
+        //}
+        //catch(\Exception $e) {
+        //    DB::rollback();
+       //     return 'opss something gone wrong !';
+      //  }
 
         return redirect(route('order.details',$order->id));
 
@@ -332,6 +336,20 @@ class OrderController extends Controller
     public function viewOrder($id){
         $order = Order::findOrFail($id);
         $order_items = $order->orderItems;
+        /*
+        $order_items = $order_items->map(function($order_item, $key) {  // map for get unserialize
+            return [
+                    'id' => $order_item->id,
+                    'product_id' => $order_item->product_id,
+                    'order_id' => $order_item->order_id,
+                    'price' => $order_item->price,
+                    'discount' => $order_item->discount,
+                    'quantity' => $order_item->quantity,
+                    'item_attributes' => unserialize($order_item->item_attributes),
+                ];
+            });  // end mapping
+            //return $order_items;
+            */
         if($order->orderSystems()->count() > 0){
             $order_process = $order->orderSystems->last();
             $last_update_status = $order_process->updated_at->diffForHumans();

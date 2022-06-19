@@ -62,6 +62,9 @@
                     <tr>
                         <td>
                             {{$item->product->name_en}}
+                            @foreach($item->item_attributes as $item_attr) {{-- unserialized array --}}
+                                <p>{{ $item_attr['price'] }}+{{ $item_attr['value'] }}</p>
+                            @endforeach
                         </td>
                         <td>
                             @if($item->product->unit == 'gram')

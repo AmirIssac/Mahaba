@@ -22,7 +22,7 @@ class CreateOrderItemsTable extends Migration
             $table->decimal('price',10,2);   // the price of the product while purchasing it
             $table->decimal('discount',10,2);   // discount value of the product while purchasing it
             $table->integer('quantity');  // weight
-            $table->string('item_attributes');  // all options of the item serialized here...
+            $table->string('item_attributes',2000);  // all options of the item serialized here...
             $table->timestamps();
         });
     }

@@ -69,6 +69,9 @@
                         <td>
                             <img src="{{asset('storage/'.$item->product->image)}}" alt="" class="product-image">
                             <h5>{{$item->product->name_en}}</h5>
+                            @foreach($item->attributeValues as $attr_val)
+                               <p style="font-size: 12px !important;"> +{{ $attr_val->price }} {{ $attr_val->value }} </p>
+                            @endforeach
                         </td>
                         <td>
                         @if($item->product->hasDiscount())  {{-- product has discount --}}
@@ -102,6 +105,18 @@
                             <input type="hidden" id="single-item-unit{{$counter}}" value="gram">
                             <input type="hidden" id="single-item-total{{$counter}}" value="{{$item->product->hasDiscount() ? ($new_price * $item->quantity) / 1000 : ($item->product->price * $item->quantity) / 1000}}">
                             <p id="h-item-total{{$counter}}">{{$item->product->hasDiscount() ? ($new_price * $item->quantity) / 1000 : ($item->product->price * $item->quantity) / 1000}}</p>
+                            +
+                            <p id="attr-item-total{{$counter}}">
+                                @php
+                                    $attr_total = 0 ;
+                                @endphp
+                                @foreach($item->attributeValues as $attr_val)
+                                     @php
+                                        $attr_total+=$attr_val->price;
+                                     @endphp
+                                @endforeach
+                                {{  $attr_total  }}
+                            </p>
                             @else
                             <input type="hidden" id="single-item-unit{{$counter}}" value="piece">
                             <input type="hidden" id="single-item-total{{$counter}}" value="{{$item->product->hasDiscount() ? $new_price * $item->quantity : $item->product->price * $item->quantity}}">

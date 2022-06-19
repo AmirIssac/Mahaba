@@ -19,6 +19,7 @@ class ProductController extends Controller
     public function indexByCategory($id){
         $category = Category::findOrFail($id);
         $categories = Category::all();
+        $attributes_list = Attribute::get();
         $products = $category->products;
         if($products->count() == 1){ // enter the product directly
             $exist_rate = false ;
@@ -32,11 +33,11 @@ class ProductController extends Controller
                     $user_rate_value = $user_rate->value;
                 }
                 return view ('Customer.product.view',['product'=>$products->first(),'rate'=>$rate,'exist_rate'=>$exist_rate,'user_rate_val' => $user_rate_value,
-                                                      'reviews'=>$reviews]);
+                                                      'reviews'=>$reviews,'attributes_list'=>$attributes_list]);
             }
             else{
                 return view('Customer.product.view', ['product'=>$products->first(),'rate'=>$rate ,'exist_rate'=>$exist_rate,'user_rate_val' => $user_rate_value,
-                                                      'reviews'=>$reviews]);
+                                                      'reviews'=>$reviews,'attributes_list'=>$attributes_list]);
             }
         }
         else
@@ -125,13 +126,17 @@ class ProductController extends Controller
     public function addProductToCart(Request $request,$id){
         $product = Product::findOrFail($id);
         $attribute_values_jquery_serialized = $request->attribute_values;
-        $attribute_values = array();
+        //$attribute_values = array();
+        //parse_str($attribute_values_jquery_serialized, $attribute_values);
+        //return $attribute_values_jquery_serialized[1]['value'];
+
         //foreach($attribute_values as $value)
             //return $value->value;
-        return parse_str($attribute_values_jquery_serialized, $attribute_values);
+        //return parse_str($attribute_values_jquery_serialized, $attribute_values);
         //return unserialize($attribute_values_jquery_serialized);
         //$user = User::findOrFail(Auth::user()->id);
         if(Auth::user()){     // logged user
+                /*
                 $user = User::findOrFail(Auth::user()->id);
                 $cart = $user->cart;
                 //$cart->products()->attach([$product->id]);
@@ -149,6 +154,22 @@ class ProductController extends Controller
                         'quantity' => $request->quantity,
                     ]);
                 }
+                return response('success');
+                */
+                $user = User::findOrFail(Auth::user()->id);
+                $cart = $user->cart;
+                //$cart->products()->attach([$product->id]);
+                    $cartItem = CartItem::create([
+                        'cart_id' => $cart->id,
+                        'product_id' => $product->id,
+                        'quantity' => $request->quantity,
+                    ]);
+                    // add attributes
+                    if(is_array($attribute_values_jquery_serialized))  // there is attributes to add
+                        for ($i = 0 ; $i < sizeof($attribute_values_jquery_serialized) ; $i++) {
+                            $attribute_value_id = $attribute_values_jquery_serialized[$i]['value'];  // attribute_value id
+                            $cartItem->attributeValues()->attach($attribute_value_id);
+                        }
                 return response('success');
         }
         else{    // Guest

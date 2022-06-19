@@ -2,6 +2,7 @@
 
 namespace App\Models\Shop;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,12 @@ class OrderItem extends Model
         'quantity',
         'item_attributes',
     ];
+
+    // create accessor for item_attributes column
+    public function getItemAttributesAttribute($value)
+    {
+        return unserialize($value);
+    }
 
     public function product()
     {

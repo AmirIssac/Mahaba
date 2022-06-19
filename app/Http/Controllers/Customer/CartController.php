@@ -19,7 +19,8 @@ class CartController extends Controller
         $user = User::findOrFail(Auth::user()->id);
         $points = $user->maxAppliedPoints();
         $cart = $user->cart;
-        $cart_items = $cart->cartItems;
+        //$cart_items = $cart->cartItems;
+        $cart_items = CartItem::with('attributeValues')->where('cart_id',$cart->id)->get();
         $tax_row = Setting::where('key','tax')->first();
         $min_order_row = Setting::where('key','min_order_limit')->first();
         $one_percent_discount = Setting::where('key','one_percent_discount_by_points')->first()->value;
@@ -74,6 +75,8 @@ class CartController extends Controller
 
     public function deleteCartItem($id){
         $cart_item = CartItem::findOrFail($id);
+        foreach($cart_item->attributeValues as $attr_val)
+            $cart_item->attributeValues()->detach($attr_val->id);
         $cart_item->delete();
         return back();
     }
@@ -81,6 +84,11 @@ class CartController extends Controller
     public function deleteCartContent($id = 'session_cart'){   // default value because its a optional parameter
         if($id != 'session_cart'){
             $cart = Cart::findOrFail($id);
+            //$cart->cartItems()->delete();
+            $cart_items = $cart->cartItems;
+            foreach($cart_items as $item)
+                foreach($item->attributeValues as $attr_val)
+                    $item->attributeValues()->detach($attr_val->id);
             $cart->cartItems()->delete();
             return back();
         }

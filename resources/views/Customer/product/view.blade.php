@@ -286,7 +286,12 @@ function addToCartNotification(from, align){
            // var attribute_values = $('.attribute_values').val();
            //alert($('input[name="attribute_values[]"]:checked').serialize());
            // all attribute values checked
-           var attribute_values = $('input[name="attribute_values[]"]:checked').serialize();
+           var attribute_values = $('input[name="attribute_values[]"]:checked').serializeArray();
+          // console.log(attribute_values).serializeArray();
+           //var attribute_values = $('input:checkbox:checked').val();
+           //var formData        = $('input[name="attribute_values[]"]:checked').serializeArray();
+           //alert(formData);
+           //alert(attribute_values);
             //alert(attribute_values);
             $.ajax({
                 headers: {
@@ -297,7 +302,6 @@ function addToCartNotification(from, align){
                 data : { quantity : qty , attribute_values : attribute_values },
                 //dataType: 'json',
                 success: function(data){    // data is the response come from controller
-                    alert(data);
                     if(data == 'success')
                         addToCartNotification('top','center');
                 }

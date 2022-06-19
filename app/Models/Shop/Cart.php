@@ -22,12 +22,12 @@ class Cart extends Model
     }
 
     // pause
-    
+
     public function cartItems()
     {
         return $this->hasMany(CartItem::class);
     }
-    
+
     // pause
     /*
     public function products()
@@ -41,7 +41,8 @@ class Cart extends Model
 
 
     public function getTotal(){
-        $cart_items = $this->cartItems;
+        //$cart_items = $this->cartItems;
+        $cart_items = CartItem::with('attributeValues')->where('cart_id',$this->id)->get();
         $cart_total = 0 ;
         foreach($cart_items as $item){
             if($item->product->hasDiscount()){
@@ -65,7 +66,9 @@ class Cart extends Model
                         $cart_total = $cart_total + ($item->product->price * $item->quantity / 1000);
                 else
                         $cart_total = $cart_total + ($item->product->price * $item->quantity);
-
+            // add attr_val_prices
+            foreach($item->attributeValues as $attr_val)
+                $cart_total += $attr_val->price;
         }
         // points discount
         $points_applied = Session::get('points_applied');
@@ -83,7 +86,8 @@ class Cart extends Model
     }
 
     public function getTotalSubmittingOrder(&$total_order_price,&$order_items_arr , &$tax_value){   // argument by reference
-        $cart_items = $this->cartItems;
+        //$cart_items = $this->cartItems;
+        $cart_items = CartItem::with('attributeValues')->where('cart_id',$this->id)->get();
         $total_order_price = 0 ;
         $tax_row = Setting::where('key','tax')->first();
         $tax = (float) $tax_row->value;
@@ -98,16 +102,39 @@ class Cart extends Model
                      else
                             $total_order_price += $new_price * $item->quantity;
                      // order item
-                     $order_items_arr[] = ['product_id' => $item->product->id , 'price' => $new_price , 'discount' => $discount , 'quantity' => $item->quantity];
+                     // attribute add to order_item
+                     // $attribute_values is array of arrays
+                     if($item->attributeValues()->count() > 0)
+                        foreach($item->attributeValues as $attr_val){
+                                $attribute_values[] = array('id' => $attr_val->id , 'attribute_id' => $attr_val->attribute_id,
+                                                            'value' => $attr_val->value , 'price' => $attr_val->price);
+                        }
+                     else // no attribute values
+                        $attribute_values = array(); // empty
+                     $attribute_values = serialize($attribute_values);
+                     $order_items_arr[] = ['product_id' => $item->product->id , 'price' => $new_price , 'discount' => $discount , 'quantity' => $item->quantity,
+                                            'attribute_values' => $attribute_values];
                      }
                 else {
-                     $new_price = $item->product->price - $item->product->discount->value;   
+                     $new_price = $item->product->price - $item->product->discount->value;
                      if($item->product->unit == 'gram')
                             $total_order_price += $new_price * $item->quantity / 1000 ;
                      else
-                            $total_order_price += $new_price * $item->quantity;                     // order item
-                     $order_items_arr[] = ['product_id' => $item->product->id , 'price' => $new_price , 'discount' => $item->product->discount->value  , 'quantity' => $item->quantity];
-                }   
+                            $total_order_price += $new_price * $item->quantity;
+                     // order item
+                     // attribute add to order_item
+                     // $attribute_values is array of arrays
+                     if($item->attributeValues()->count() > 0)
+                     foreach($item->attributeValues as $attr_val){
+                             $attribute_values[] = array('id' => $attr_val->id , 'attribute_id' => $attr_val->attribute_id,
+                                                         'value' => $attr_val->value , 'price' => $attr_val->price);
+                     }
+                     else // no attribute values
+                        $attribute_values = array(); // empty
+                     $attribute_values = serialize($attribute_values);
+                     $order_items_arr[] = ['product_id' => $item->product->id , 'price' => $new_price , 'discount' => $item->product->discount->value  , 'quantity' => $item->quantity,
+                                           'attribute_values' => $attribute_values];
+                }
             }
             else{   // no discount
                      if($item->product->unit == 'gram')
@@ -115,8 +142,23 @@ class Cart extends Model
                      else
                         $total_order_price += $item->product->price * $item->quantity;
                       // order item
-                      $order_items_arr[] = ['product_id' => $item->product->id , 'price' => $item->product->price , 'discount' => 0  , 'quantity' => $item->quantity];
-            } 
+                     // attribute add to order_item
+                     // $attribute_values is array of arrays
+                     if($item->attributeValues()->count() > 0)
+                        foreach($item->attributeValues as $attr_val){
+                                $attribute_values[] = array('id' => $attr_val->id , 'attribute_id' => $attr_val->attribute_id,
+                                                            'value' => $attr_val->value , 'price' => $attr_val->price);
+                        }
+                     else // no attribute values
+                        $attribute_values = array(); // empty
+                     $attribute_values = serialize($attribute_values);
+                     $order_items_arr[] = ['product_id' => $item->product->id , 'price' => $item->product->price , 'discount' => 0  , 'quantity' => $item->quantity,
+                                           'attribute_values' => $attribute_values];
+            }
+            // add attr_val_prices
+            foreach($item->attributeValues as $attr_val)
+                $total_order_price += $attr_val->price;
+            unset($attribute_values); // delete previuos attrs
         }
         // check if points applied so we make discount
         $points_applied = Session::get('points_applied');

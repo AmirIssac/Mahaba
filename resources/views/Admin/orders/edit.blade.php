@@ -198,6 +198,9 @@
                             @endif
                         </td>
                         <td>
+                            @foreach($item->item_attributes as $item_attr)
+                          + {{ $item_attr['value'] }} ({{ $item_attr['price'] }})
+                            @endforeach
                         </td>
                         <td style="font-weight: bold; color: #38b818;" class="text-center">
                           @if($loop->last)
