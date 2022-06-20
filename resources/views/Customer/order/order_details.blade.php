@@ -22,9 +22,23 @@
                     <tr>
                         <td>{{$item->product->name_en}}
                         </td>
-                        <td><b>{{$item->quantity/1000}} K.G </b> </td>
                         <td>
-                            <span>{{$item->price * $item->quantity / 1000}} AED</span>
+                            <b>
+                            @if($item->product->isGram())
+                            {{$item->quantity/1000}} K.G
+                            @elseif($item->product->isPiece())
+                            {{$item->quantity}}
+                            @endif
+                            </b>
+                        </td>
+                        <td>
+                            <span>
+                                @if($item->product->isGram())
+                                {{$item->price * $item->quantity / 1000}} AED
+                                @elseif($item->product->isPiece())
+                                {{$item->price * $item->quantity}} AED
+                                @endif
+                            </span>
                         </td>
                     </tr>
                 @endforeach

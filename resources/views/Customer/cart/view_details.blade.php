@@ -95,7 +95,11 @@
                                 <input type="number" class="displaynone" id="min{{$item->product->id}}" value="{{$item->product->min_weight}}">
                                 <input type="number" class="displaynone" id="increase{{$item->product->id}}" value="{{$item->product->increase_by}}">
                                 <div class="cart-qty">
+                                    @if($item->product->isGram())
                                     {{$item->quantity / 1000}} KG
+                                    @elseif($item->product->isPiece())
+                                    {{$item->quantity}}
+                                    @endif
                                     <input type="hidden" id="pro{{$item->product->id}}">
                                 </div>
                             </div>

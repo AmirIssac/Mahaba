@@ -168,7 +168,11 @@
                                     <input style="display: none;" type="number" id="initial-price" value="{{$product->price}}">
                                     <h4>السعر {{ $product->price }} درهم</h4>
                 @endif
+                @if($product->isGram())
                     <h4>من أجل كل 1 كيلو غرام</h4>
+                @elseif($product->isPiece())
+                    <h4>  من أجل كل قطعة  </h4>
+                @endif
                     {{--
                     <input style="display: none"  id="weight-in-gram" type='number' name='weight' value="{{$product->unit == 'gram' ? $product->min_weight : $product->min_weight}}" readonly/>
                     --}}
@@ -192,14 +196,25 @@
                         --}}
                             <span class="custom-dropdown small">
                                 <select id="weight-in-gram">
-                                    <?php $quantity = $product->min_weight / 1000 ;
-                                      $increasing = $product->increase_by / 1000 ;
-                                      $loop_counter = 1 ;
-                                    ?>
-                                    @for($i=$quantity ; $loop_counter <= 12 ; $i+=$increasing)
-                                        <option value="{{ $i * 1000 }}">{{ $i }} K.G</option>
-                                        <?php $loop_counter++ ?>
-                                    @endfor
+                                    @if($product->isGram())
+                                        <?php $quantity = $product->min_weight / 1000 ;
+                                        $increasing = $product->increase_by / 1000 ;
+                                        $loop_counter = 1 ;
+                                        ?>
+                                        @for($i=$quantity ; $loop_counter <= 12 ; $i+=$increasing)
+                                            <option value="{{ $i * 1000 }}">{{ $i }} K.G</option>
+                                            <?php $loop_counter++ ?>
+                                        @endfor
+                                    @elseif($product->isPiece())
+                                        <?php $quantity = $product->min_weight;
+                                        $increasing = $product->increase_by;
+                                        $loop_counter = 1 ;
+                                        ?>
+                                        @for($i=$quantity ; $loop_counter <= 12 ; $i+=$increasing)
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                            <?php $loop_counter++ ?>
+                                        @endfor
+                                    @endif
                                 </select>
                             </span>
                     </div>
