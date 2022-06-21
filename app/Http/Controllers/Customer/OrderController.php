@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DiscountDetail;
 use App\Models\OrderSystem;
 use App\Models\Setting;
+use App\Models\Shop\CartItem;
 use App\Models\Shop\Discount;
 use App\Models\Shop\Order;
 use App\Models\Shop\OrderItem;
@@ -35,7 +36,8 @@ class OrderController extends Controller
         //Session::put('points_applied',$points_applied);
         $cart = $user->cart;
         $hours_remaining_to_deliver = $cart->calculateDeliverTime();
-        $cart_items = $cart->cartItems;
+        //$cart_items = $cart->cartItems;
+        $cart_items = CartItem::with('attributeValues')->where('cart_id',$cart->id)->get();
         $date = now()->toDateString();
         $total_order_price = 0 ;
         $tax_row = Setting::where('key','tax')->first();
@@ -99,7 +101,9 @@ class OrderController extends Controller
             'first_name' => ['required', 'max:200'],
             'last_name' => ['required','max:200'],
             'phone' => ['required','digits:10','regex:/(05)[0-9]{8}/'],
-            'email' => ['required','email']
+            'email' => ['required','email'],
+            'address1' => ['required_without:address2'],
+            'address2' => ['required_without:address1'],
         ]);
 
         $user = User::findOrFail(Auth::user()->id);

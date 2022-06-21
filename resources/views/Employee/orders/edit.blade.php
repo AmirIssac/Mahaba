@@ -136,6 +136,7 @@
                         Price
                     </th>
                     <th>
+                        Extras
                     </th>
                     <th>
                     </th>

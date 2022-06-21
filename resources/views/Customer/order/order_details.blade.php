@@ -17,6 +17,9 @@
                     <th>Product</th>
                     <th>QTY</th>
                     <th>Price</th>
+                    <th>
+                        Extras
+                    </th>
                 </tr>
                 @foreach($order_items as $item)
                     <tr>
@@ -39,6 +42,11 @@
                                 {{$item->price * $item->quantity}} AED
                                 @endif
                             </span>
+                        </td>
+                        <td>
+                            @foreach($item->item_attributes as $attr)
+                                +{{ $attr['value'] }} ({{ $attr['price'] }})
+                            @endforeach
                         </td>
                     </tr>
                 @endforeach

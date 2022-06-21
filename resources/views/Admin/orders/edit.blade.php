@@ -170,6 +170,7 @@
                         Price
                     </th>
                     <th>
+                        Extras
                     </th>
                     <th style="font-weight: bold" class="text-center">
                       Total

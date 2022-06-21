@@ -48,6 +48,16 @@
                                 </div>
                                 <div style="margin: 8px 0px;">
                                 @if($profile->address_address)
+                                    @if($errors->has('address1'))
+                                            <p style="color: red; font-weight:bold;">
+                                                {{ $errors->first('address1') }}
+                                            </p>
+                                    @endif
+                                    @if($errors->has('address2'))
+                                    <p style="color: red; font-weight:bold;">
+                                        {{ $errors->first('address2') }}
+                                    </p>
+                                    @endif
                                     Address
                                     <input type="text" class="checkout__input__add taken" value="{{$profile->address_address}}" name="address1" id="address1" readonly>
                                     <label>
@@ -55,6 +65,11 @@
                                     </label>
                                     <input type="text" placeholder="type address here if it's different from your main profile address" class="form-control" name="address2" id="address2">
                                 @else
+                                    @if($errors->has('address2'))
+                                    <p style="color: red; font-weight:bold;">
+                                        {{ $errors->first('address2') }}
+                                    </p>
+                                    @endif
                                     Address
                                 <input type="text" name="address2" id="address2" class="form-control">
                                 @endif
@@ -128,6 +143,10 @@
                                     @else
                                     <b style="color: wheat">{{$item->quantity}} </b> <span>{{$item->product->price * $item->quantity}} AED</span>
                                     @endif
+                                    @foreach($item->attributeValues as $attr_val)
+                                        <span>+{{ $attr_val->value }}({{ $attr_val->price }})</span>
+                                    @endforeach
+                                    <span></span>
                                 </li>
                                 @endif
                             @endforeach
