@@ -45,7 +45,10 @@
                         </td>
                         <td>
                             @foreach($item->item_attributes as $attr)
-                                +{{ $attr['value'] }} ({{ $attr['price'] }})
+                                +{{ $attr['value'] }}
+                                {{--
+                                 ({{ $attr->printAttributeValuePrice($item->product->id) }})
+                                 --}}
                             @endforeach
                         </td>
                     </tr>

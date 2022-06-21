@@ -144,7 +144,13 @@
                                     <b style="color: wheat">{{$item->quantity}} </b> <span>{{$item->product->price * $item->quantity}} AED</span>
                                     @endif
                                     @foreach($item->attributeValues as $attr_val)
-                                        <span>+{{ $attr_val->value }}({{ $attr_val->price }})</span>
+                                        <span>+{{ $attr_val->value }}
+                                                @if($attr_val->isValue())
+                                                    ({{ $attr_val->printAttributeValuePrice($item->product->id) }})
+                                                @elseif($attr_val->isPercent())
+                                                    ({{ $attr_val->printAttributeValuePrice($item->product->id) * $item->quantity }})
+                                                @endif
+                                        </span>
                                     @endforeach
                                     <span></span>
                                 </li>

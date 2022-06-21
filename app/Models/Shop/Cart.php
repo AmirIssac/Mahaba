@@ -36,10 +36,6 @@ class Cart extends Model
     }
     */
 
-
-
-
-
     public function getTotal(){
         //$cart_items = $this->cartItems;
         $cart_items = CartItem::with('attributeValues')->where('cart_id',$this->id)->get();
@@ -67,8 +63,12 @@ class Cart extends Model
                 else
                         $cart_total = $cart_total + ($item->product->price * $item->quantity);
             // add attr_val_prices
-            foreach($item->attributeValues as $attr_val)
-                $cart_total += $attr_val->price;
+            foreach($item->attributeValues as $attr_val){
+                if($attr_val->isValue())
+                    $cart_total += $attr_val->printAttributeValuePrice($item->product->id);
+                elseif($attr_val->isPercent())
+                    $cart_total += $attr_val->printAttributeValuePrice($item->product->id) * $item->quantity;
+            }
         }
         // points discount
         $points_applied = Session::get('points_applied');
@@ -107,7 +107,8 @@ class Cart extends Model
                      if($item->attributeValues()->count() > 0)
                         foreach($item->attributeValues as $attr_val){
                                 $attribute_values[] = array('id' => $attr_val->id , 'attribute_id' => $attr_val->attribute_id,
-                                                            'value' => $attr_val->value , 'price' => $attr_val->price);
+                                                            'value' => $attr_val->value , 'value_en' => $attr_val->value_en , 'value_type' =>  $attr_val->value_type ,
+                                                            'price' => $attr_val->price);
                         }
                      else // no attribute values
                         $attribute_values = array(); // empty
@@ -147,7 +148,8 @@ class Cart extends Model
                      if($item->attributeValues()->count() > 0)
                         foreach($item->attributeValues as $attr_val){
                                 $attribute_values[] = array('id' => $attr_val->id , 'attribute_id' => $attr_val->attribute_id,
-                                                            'value' => $attr_val->value , 'price' => $attr_val->price);
+                                                            'value' => $attr_val->value , 'value_en' => $attr_val->value_en , 'value_type' =>  $attr_val->value_type ,
+                                                            'price' => $attr_val->price);
                         }
                      else // no attribute values
                         $attribute_values = array(); // empty
@@ -156,8 +158,12 @@ class Cart extends Model
                                            'attribute_values' => $attribute_values];
             }
             // add attr_val_prices
-            foreach($item->attributeValues as $attr_val)
-                $total_order_price += $attr_val->price;
+            foreach ($item->attributeValues as $attr_val) {
+                if($attr_val->isValue())
+                    $total_order_price += $attr_val->printAttributeValuePrice($item->product->id);
+                else
+                    $total_order_price += $attr_val->printAttributeValuePrice($item->product->id) * $item->quantity;
+            }
             unset($attribute_values); // delete previuos attrs
         }
         // check if points applied so we make discount

@@ -192,7 +192,12 @@
                             <select class="form-control" name="attribute_values[]" multiple>
                                 @foreach($attribute->attributeValues as $attribute_value)
                                             <option value="{{ $attribute_value->id }}">
-                                                {{ $attribute_value->value }}  +{{ $attribute_value->price }}
+                                                {{ $attribute_value->value }}  +
+                                                @if($attribute_value->isValue())
+                                                    {{ $attribute_value->price }}
+                                                @else
+                                                    {{ $attribute_value->price }} %  من المنتج
+                                                @endif
                                             </option>
                                 @endforeach
                             </select>

@@ -223,21 +223,11 @@
                         @foreach($attributes_list as $attribute)
                         {{ $attribute->name_ar }}
                         <br>
-                        {{--
-                        <span class="custom-dropdown small">
-                        <select name="attribute_values[]">
-                            @foreach($product->attributeValues as $attribute_value)
-                                @if($attribute_value->attribute_id == $attribute->id)
-                                   <option value="{{ $attribute_value->value }}"> {{ $attribute_value->value }} </option>
-                                @endif
-                            @endforeach
-                        </select>
-                        </span>
-                        --}}
                         <br>
                             @foreach($product->attributeValues as $attribute_value)
                                     @if($attribute_value->attribute_id == $attribute->id)
-                                        {{ $attribute_value->value }}+{{ $attribute_value->price }}
+                                        {{ $attribute_value->value }}+
+                                        {{ $attribute_value->printAttributeValuePrice($product->id) }}
                                         <input type="checkbox" name="attribute_values[]" class="attribute_values" value="{{ $attribute_value->id }}">
                                     @endif
                             @endforeach
