@@ -178,6 +178,47 @@
                                     <td>
                                         <img src="{{asset('storage/'.$item->image)}}" alt="" class="product-image">
                                         <h5>{{$item->name_en}}</h5>
+
+                                            @if($item->isGram())
+                                                +
+                                                <p id="attr-item-total{{$counter}}">
+                                                    @php
+                                                        $attr_total = 0 ;
+                                                    @endphp
+                                                    @foreach($item->attributes as $attr_val)
+                                                        @php
+                                                           // $percent = $attr_val['price'];
+                                                            //$attr_cost = $item->pri
+                                                            $attr_val_obj = App\Models\AttributeValue::find($attr_val['id']);
+                                                            if($attr_val_obj->isValue())
+                                                                $attr_total+=$attr_val_obj->printAttributeValuePrice($item->id);
+                                                            elseif($attr_val_obj->isPercent())
+                                                                $attr_total+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity
+                                                        @endphp
+                                                    @endforeach
+                                                    {{  $attr_total  }}
+                                                </p>
+                                            @else {{-- piece --}}
+                                                +
+                                                <p id="attr-item-total{{$counter}}">
+                                                    @php
+                                                        $attr_total = 0 ;
+                                                    @endphp
+                                                    @foreach($item->attributes as $attr_val)
+                                                        @php
+                                                            // $percent = $attr_val['price'];
+                                                            //$attr_cost = $item->pri
+                                                            $attr_val_obj = App\Models\AttributeValue::find($attr_val['id']);
+                                                            if($attr_val_obj->isValue())
+                                                                $attr_total+=$attr_val_obj->printAttributeValuePrice($item->id);
+                                                            elseif($attr_val_obj->isPercent())
+                                                                $attr_total+=$attr_val_obj->printAttributeValuePrice($item->id);
+                                                        @endphp
+                                                    @endforeach
+                                                    {{  $attr_total  }}
+                                                </p>
+                                            @endif
+
                                     </td>
                                     <td>
                                     @if($item->hasDiscount())  {{-- product has discount --}}
@@ -192,7 +233,6 @@
                                     <input type="hidden" id="final-item-price{{$counter}}" value="{{$new_price}}">
                                     {{$new_price}}
                                     @else
-
                                         <input type="hidden" id="final-item-price{{$counter}}" value="{{$item->price}}">
                                         {{$item->price}}
                                     @endif
@@ -202,11 +242,16 @@
                                             <input type="number" class="displaynone" id="min{{$item->id}}" value="{{$item->min_weight}}">
                                             <input type="number" class="displaynone" id="increase{{$item->id}}" value="{{$item->increase_by}}">
                                             <div class="cart-qty">
+                                                @if($item->isGram())
                                                 {{$item->quantity / 1000}} KG
+                                                @elseif($item->isPiece())
+                                                {{$item->quantity}}
+                                                @endif
                                                 <input type="hidden" id="pro{{$item->id}}">
                                             </div>
                                         </div>
                                     </td>
+                                    {{--
                                     <td>
                                         @if($item->unit == 'gram')
                                         <input type="hidden" id="single-item-unit{{$counter}}" value="gram">
@@ -217,6 +262,54 @@
                                         <input type="hidden" id="single-item-total{{$counter}}" value="{{$item->hasDiscount() ? $new_price * $item->quantity : $item->price * $item->quantity}}">
                                         <p id="h-item-total{{$counter}}">{{$item->hasDiscount() ? $new_price * $item->quantity : $item->price * $item->quantity}}</p>
                                         @endif
+                                    </td>
+                                    --}}
+                                    <td> {{-- Total Row --}}
+                                        @if($item->isGram())
+                                            <input type="hidden" id="single-item-unit{{$counter}}" value="gram">
+                                            <input type="hidden" id="single-item-total{{$counter}}" value="{{$item->hasDiscount() ? ($new_price * $item->quantity) / 1000 : ($item->price * $item->quantity) / 1000}}">
+                                            <p id="h-item-total{{$counter}}">{{$item->hasDiscount() ? ($new_price * $item->quantity) / 1000 : ($item->price * $item->quantity) / 1000}}</p>
+                                                +
+                                                <p id="attr-item-total{{$counter}}">
+                                                    @php
+                                                        $attr_total = 0 ;
+                                                    @endphp
+                                                    @foreach($item->attributes as $attr_val)
+                                                        @php
+                                                           // $percent = $attr_val['price'];
+                                                            //$attr_cost = $item->pri
+                                                            $attr_val_obj = App\Models\AttributeValue::find($attr_val['id']);
+                                                            if($attr_val_obj->isValue())
+                                                                $attr_total+=$attr_val_obj->printAttributeValuePrice($item->id);
+                                                            elseif($attr_val_obj->isPercent())
+                                                                $attr_total+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity
+                                                        @endphp
+                                                    @endforeach
+                                                    {{  $attr_total  }}
+                                                </p>
+                                            @else {{-- piece --}}
+                                                <input type="hidden" id="single-item-unit{{$counter}}" value="piece">
+                                                <input type="hidden" id="single-item-total{{$counter}}" value="{{$item->hasDiscount() ? ($new_price * $item->quantity)  : ($item->price * $item->quantity)}}">
+                                                <p id="h-item-total{{$counter}}">{{$item->hasDiscount() ? ($new_price * $item->quantity) : ($item->price * $item->quantity)}}</p>
+                                                +
+                                                <p id="attr-item-total{{$counter}}">
+                                                    @php
+                                                        $attr_total = 0 ;
+                                                    @endphp
+                                                    @foreach($item->attributes as $attr_val)
+                                                        @php
+                                                            // $percent = $attr_val['price'];
+                                                            //$attr_cost = $item->pri
+                                                            $attr_val_obj = App\Models\AttributeValue::find($attr_val['id']);
+                                                            if($attr_val_obj->isValue())
+                                                                $attr_total+=$attr_val_obj->printAttributeValuePrice($item->id);
+                                                            elseif($attr_val_obj->isPercent())
+                                                                $attr_total+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity;
+                                                        @endphp
+                                                    @endforeach
+                                                    {{  $attr_total  }}
+                                                </p>
+                                            @endif
                                     </td>
                                     <td>
                                         {{--

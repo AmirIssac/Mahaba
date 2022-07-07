@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\ProductRate;
 use App\Models\Shop\CartItem;
 use App\Models\Shop\Category;
@@ -123,6 +124,88 @@ class ProductController extends Controller
     }
     */
 
+    /*
+    public function addProductToCart(Request $request,$id){
+        $product = Product::findOrFail($id);
+        $attribute_values_jquery_serialized = $request->attribute_values;
+        //$attribute_values = array();
+        //parse_str($attribute_values_jquery_serialized, $attribute_values);
+        //return $attribute_values_jquery_serialized[1]['value'];
+
+        //foreach($attribute_values as $value)
+            //return $value->value;
+        //return parse_str($attribute_values_jquery_serialized, $attribute_values);
+        //return unserialize($attribute_values_jquery_serialized);
+        //$user = User::findOrFail(Auth::user()->id);
+        if(Auth::user()){     // logged user
+                /*
+                $user = User::findOrFail(Auth::user()->id);
+                $cart = $user->cart;
+                //$cart->products()->attach([$product->id]);
+                // check if product repeated in cart so we increase quantity
+                $check_product = CartItem::where('cart_id',$cart->id)->where('product_id',$product->id)->first();
+                if($check_product){
+                    $check_product->update([
+                        'quantity' => $check_product->quantity + $request->quantity,   // quantity is the weight in gram
+                    ]);
+                }
+                else{
+                    $cartItem = CartItem::create([
+                        'cart_id' => $cart->id,
+                        'product_id' => $product->id,
+                        'quantity' => $request->quantity,
+                    ]);
+                }
+                return response('success');
+                /
+                $user = User::findOrFail(Auth::user()->id);
+                $cart = $user->cart;
+                //$cart->products()->attach([$product->id]);
+                    $cartItem = CartItem::create([
+                        'cart_id' => $cart->id,
+                        'product_id' => $product->id,
+                        'quantity' => $request->quantity,
+                    ]);
+                    // add attributes
+                    if(is_array($attribute_values_jquery_serialized))  // there is attributes to add
+                        for ($i = 0 ; $i < sizeof($attribute_values_jquery_serialized) ; $i++) {
+                            $attribute_value_id = $attribute_values_jquery_serialized[$i]['value'];  // attribute_value id
+                            $cartItem->attributeValues()->attach($attribute_value_id);
+                        }
+                return response('success');
+        }
+        else{    // Guest
+                if(!Session::get('cart')){    // the first time we add to cart so we initialize the cart array to store in Session
+                //$cart = array(array());   // array contain the each cart_item as array
+                $cart_item = array('product_id'=>$product->id,'quantity'=>$request->quantity);
+                $cart[]=$cart_item;
+                Session::put('cart',$cart);
+                }
+                else{    // no init needed
+                    $cart = Session::get('cart');
+                    $product_exist = false ;
+                    $i = 0 ;
+                    foreach($cart as $item){
+                        if($item['product_id'] == $product->id){  // product exist in the cart before
+                            $new_quantity = $request->quantity ;
+                            $cart[$i]['quantity'] = $cart[$i]['quantity'] + $new_quantity ;
+                            $product_exist = true ;
+                            break;
+                        }
+                        $i++;
+                    }
+                    Session::put('cart',$cart);
+                    if(!$product_exist){
+                        $cart_item = array('product_id'=>$product->id,'quantity'=>$request->quantity);
+                        $cart[]=$cart_item;
+                        Session::put('cart',$cart);
+                    }
+                }
+                return response('success');
+        }
+    }
+    */
+
     public function addProductToCart(Request $request,$id){
         $product = Product::findOrFail($id);
         $attribute_values_jquery_serialized = $request->attribute_values;
@@ -175,29 +258,34 @@ class ProductController extends Controller
         else{    // Guest
                 if(!Session::get('cart')){    // the first time we add to cart so we initialize the cart array to store in Session
                 //$cart = array(array());   // array contain the each cart_item as array
-                $cart_item = array('product_id'=>$product->id,'quantity'=>$request->quantity);
+                // add attributes
+                $attributes = array();
+                if(is_array($attribute_values_jquery_serialized)){  // there is attributes to add
+                    for ($i = 0 ; $i < sizeof($attribute_values_jquery_serialized) ; $i++) {
+                        $attribute_value_id = $attribute_values_jquery_serialized[$i]['value'];  // attribute_value id
+                        $attr = AttributeValue::find($attribute_value_id);
+                        $attributes[] = array('id' => $attr->id , 'price' => $attr->price , 'value_type' => $attr->value_type);
+                    }
+                }
+                $cart_item = array('product_id'=>$product->id,'quantity'=>$request->quantity,'attributes'=>$attributes);
                 $cart[]=$cart_item;
                 Session::put('cart',$cart);
                 }
                 else{    // no init needed
                     $cart = Session::get('cart');
-                    $product_exist = false ;
-                    $i = 0 ;
-                    foreach($cart as $item){
-                        if($item['product_id'] == $product->id){  // product exist in the cart before
-                            $new_quantity = $request->quantity ;
-                            $cart[$i]['quantity'] = $cart[$i]['quantity'] + $new_quantity ;
-                            $product_exist = true ;
-                            break;
-                        }
-                        $i++;
-                    }
                     Session::put('cart',$cart);
-                    if(!$product_exist){
-                        $cart_item = array('product_id'=>$product->id,'quantity'=>$request->quantity);
-                        $cart[]=$cart_item;
-                        Session::put('cart',$cart);
+                    // add attributes
+                    $attributes = array();
+                    if(is_array($attribute_values_jquery_serialized)){  // there is attributes to add
+                        for ($i = 0 ; $i < sizeof($attribute_values_jquery_serialized) ; $i++) {
+                            $attribute_value_id = $attribute_values_jquery_serialized[$i]['value'];  // attribute_value id
+                            $attr = AttributeValue::find($attribute_value_id);
+                            $attributes[] = array('id' => $attr->id , 'price' => $attr->price , 'value_type' => $attr->value_type);
+                        }
                     }
+                    $cart_item = array('product_id'=>$product->id,'quantity'=>$request->quantity,'attributes'=>$attributes);
+                    $cart[]=$cart_item;
+                    Session::put('cart',$cart);
                 }
                 return response('success');
         }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\AttributeValue;
 use App\Models\Setting;
 use App\Models\Shop\Cart;
 use App\Models\Shop\CartItem;
@@ -32,6 +33,7 @@ class CartController extends Controller
                                                     ]);
     }
 
+    /*
     public function viewGuestCart(){
         $cart = Session::get('cart');
         $cart_items = collect();
@@ -67,6 +69,58 @@ class CartController extends Controller
                         $cart_total = $cart_total + ($item->price * $item->quantity / 1000);
                 else
                         $cart_total = $cart_total + ($item->price * $item->quantity);
+        }
+        }
+        return view('Guest.cart.view_details',['cart'=>$cart,'cart_items'=>$cart_items,'cart_total' => $cart_total,'tax'=>$tax,
+                                                    'min_order'=>$min_order]);
+    }
+    */
+
+    public function viewGuestCart(){
+        $cart = Session::get('cart');
+        $cart_items = collect();
+        $tax_row = Setting::where('key','tax')->first();
+        $min_order_row = Setting::where('key','min_order_limit')->first();
+        $tax = (float) $tax_row->value;
+        $min_order = (float) $min_order_row->value;
+        $cart_total = 0 ;
+        if($cart){
+        foreach($cart as $c_item){
+            $item = Product::find($c_item['product_id']);  // but we have to take quantity too (its not stored in product object its stored in cart_item table and we dont have cart_item in session process)
+            $item->quantity = $c_item['quantity'];
+            $item->attributes = $c_item['attributes'];
+            $cart_items->add($item);
+        }
+        foreach($cart_items as $item){
+            if($item->hasDiscount()){
+                if($item->isPercentDiscount()){
+                            $discount = $item->price * $item->discount->value / 100;
+                            if($item->isGram())
+                                $cart_total = $cart_total +  (($item->price - $discount) * $item->quantity / 1000);
+                            else
+                                $cart_total = $cart_total +  ($item->price - $discount) * $item->quantity;
+                            }
+                else{
+                            if($item->isGram())
+                                $cart_total = $cart_total +  (($item->price - $item->discount->value) * $item->quantity / 1000);
+                            else
+                                $cart_total = $cart_total +  ($item->price - $item->discount->value) * $item->quantity;
+                }
+            }
+            else  // no discount for this item
+                if($item->isGram())
+                        $cart_total = $cart_total + ($item->price * $item->quantity / 1000);
+                else
+                        $cart_total = $cart_total + ($item->price * $item->quantity);
+            // add attr_vals costs
+            foreach ($item->attributes as $attr_val) {
+                $attr_val_obj = AttributeValue::find($attr_val['id']);
+                if ($attr_val_obj->isValue()) {
+                    $cart_total+=$attr_val_obj->printAttributeValuePrice($item->id);
+                } elseif ($attr_val_obj->isPercent()) {
+                    $cart_total+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity;
+                }
+            }
         }
         }
         return view('Guest.cart.view_details',['cart'=>$cart,'cart_items'=>$cart_items,'cart_total' => $cart_total,'tax'=>$tax,

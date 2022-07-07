@@ -313,7 +313,6 @@ function addToCartNotification(from, align){
             }); // ajax close
         });
 
-
         $('.to-favorite').on('click',function(){
             //var product_id = $('#product-id').val();
             var product_id = {!! json_encode($product->id, JSON_HEX_TAG) !!};
