@@ -143,7 +143,11 @@
                                     @else
                                     <b style="color: wheat">{{$item->quantity}} </b> <span>{{$item->product->price * $item->quantity}} AED</span>
                                     @endif
-                                    @foreach($item->attributeValues as $attr_val)
+                                    <span></span>
+                                </li>
+                                @endif
+                                {{-- attributes --}}
+                                @foreach($item->attributeValues as $attr_val)
                                         <span>+{{ $attr_val->value }}
                                                 @if($attr_val->isValue())
                                                     ({{ $attr_val->printAttributeValuePrice($item->product->id) }})
@@ -151,10 +155,7 @@
                                                     ({{ $attr_val->printAttributeValuePrice($item->product->id) * $item->quantity }})
                                                 @endif
                                         </span>
-                                    @endforeach
-                                    <span></span>
-                                </li>
-                                @endif
+                                @endforeach
                             @endforeach
                         </ul>
                         @if(Session::get('points_applied') && Session::get('total_before_discount'))

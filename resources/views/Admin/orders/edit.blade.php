@@ -199,9 +199,11 @@
                             @endif
                         </td>
                         <td>
-                            @foreach($item->item_attributes as $item_attr)
-                          + {{ $item_attr['value'] }} ({{ $item_attr['price'] }})
-                            @endforeach
+                                <?php $print_order_item_attributes = $item->printOrderItemAttributes(); ?>
+                                    @foreach($print_order_item_attributes as $order_attributes)
+                                        + {{ $order_attributes['value'] }} ({{ $order_attributes['final_price'] }})
+                                    @endforeach
+
                         </td>
                         <td style="font-weight: bold; color: #38b818;" class="text-center">
                           @if($loop->last)

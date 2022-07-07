@@ -276,7 +276,211 @@
       </form>
     </div>
 
-        <div class="col-md-12">
+    <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title"> Attributes </h4>
+            <p class="category"></p>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th>
+                    Name EN
+                  </th>
+                  <th>
+                    Name AR
+                  </th>
+                  <th class="text-right">
+                    Actions
+                  </th>
+                </thead>
+                <tbody>
+                  @foreach($attributes as $attribute)
+                  <tr>
+                    <td>
+                      {{$attribute->name_en}}
+                    </td>
+                    <td>
+                      {{$attribute->name_ar}}
+                    </td>
+                    <td class="text-right">
+                      <a><i class="fas fa-tools"></i></a>
+                    </td>
+                  </tr>
+                  @endforeach
+                  <tr>
+                      <td>
+                      <button id="new-attribute-btn" class="btn btn-success">New</button>
+                      </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+            {{-- new Attribute Form --}}
+            <div class="col-md-12">
+            <form action="{{route('store.attribute')}}" method="POST">
+                @csrf
+            <div id="new-attribute-form" class="card displaynone">
+              <div class="card-header">
+                <h4 class="card-title">New Attribute</h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class=" text-primary">
+                      <th>
+                        Name EN
+                      </th>
+                      <th>
+                        Name AR
+                      </th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                          <td> <input type="text" name="name_en" class="form-control" required> </td>
+                          <td> <input type="text" name="name_ar" class="form-control" required> </td>
+                      </tr>
+                      <tr>
+                        <td><button class="btn btn-primary">Confirm</button></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </form>
+            </div>
+
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title"> Product Attributes </h4>
+            <p class="category"></p>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th>
+                    Class
+                  </th>
+                  <th>
+                    Name AR
+                  </th>
+                  <th>
+                    Name EN
+                  </th>
+                  <th>
+                    Price
+                  </th>
+                  <th class="text-right">
+                    Actions
+                  </th>
+                </thead>
+                <tbody>
+                  @foreach($attribute_values as $attr_val)
+                  <tr>
+                    <td>
+                      {{$attr_val->attribute->name_ar}}
+                    </td>
+                    <td>
+                      {{$attr_val->value}}
+                    </td>
+                    <td>
+                        {{$attr_val->value_en}}
+                    </td>
+                    <td>
+                        @if($attr_val->value_type == 'value')
+                        {{$attr_val->price}}
+                        @else
+                        {{$attr_val->price}}%
+                        @endif
+                    </td>
+                    <td class="text-right">
+                      <a><i class="fas fa-tools"></i></a>
+                    </td>
+                  </tr>
+                  @endforeach
+                  <tr>
+                      <td>
+                      <button id="new-attribute-value-btn" class="btn btn-success">New</button>
+                      </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- new product Attribute Form --}}
+      <div class="col-md-12">
+      <form action="{{route('store.attribute.value')}}" method="POST">
+        @csrf
+    <div id="new-attribute-value-form" class="card displaynone">
+      <div class="card-header">
+        <h4 class="card-title">New Product Attribute</h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class=" text-primary">
+              <th>
+                Name EN
+              </th>
+              <th>
+                Name AR
+              </th>
+              <th>
+                Class
+              </th>
+              <th>
+                Price
+              </th>
+              <th>
+                Type
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                  <td> <input type="text" name="name_en" class="form-control" required> </td>
+                  <td> <input type="text" name="name_ar" class="form-control" required> </td>
+                  <td>
+                    <select name="attribute" class="form-control">
+                        @foreach($attributes as $attribute)
+                            <option value="{{$attribute->id}}">{{ $attribute->name_ar }}</option>
+                        @endforeach
+                    </select>
+                  </td>
+                  <td> <input type="number" min="0" step="0.1" name="price" class="form-control" required> </td>
+                  <td>
+                    <select name="type" class="form-control">
+                        <option value="value">Value</option>
+                        <option value="percent">Percent</option>
+                    </select>
+                  </td>
+              </tr>
+              <tr>
+                <td><button class="btn btn-primary">Confirm</button></td>
+                <td></td>
+              </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+    <div class="col-md-12">
       <div class="card">
         <div class="card-header">
           <h4 class="card-title">   Categories </h4>
@@ -492,7 +696,23 @@
         $('html, body').animate({
           scrollTop: $("#new-product-form").offset().top
         }, 1000);
-    })
+    });
+
+    $('#new-attribute-btn').on('click',function(){
+        $('#new-attribute-form').removeClass('displaynone');
+        $(this).addClass('displaynone');
+        $('html, body').animate({
+          scrollTop: $("#new-attribute-form").offset().top
+        }, 1000);
+    });
+
+    $('#new-attribute-value-btn').on('click',function(){
+        $('#new-attribute-value-form').removeClass('displaynone');
+        $(this).addClass('displaynone');
+        $('html, body').animate({
+          scrollTop: $("#new-attribute-value-form").offset().top
+        }, 1000);
+    });
 
     $('#new-discount-btn').on('click',function(){
         $('#new-discount-form').removeClass('displaynone');

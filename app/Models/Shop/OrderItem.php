@@ -24,6 +24,22 @@ class OrderItem extends Model
         return unserialize($value);
     }
 
+    public function printOrderItemAttributes(){
+        $attributes = $this->item_attributes;
+        $attributes_print = array();
+        foreach($attributes as $attr){
+            if($attr['value_type'] == 'value')
+                $final_price = $attr['price'];
+            elseif($attr['value_type'] == 'percent')
+                $final_price = ( $attr['price'] * $this->price / 100 ) * $this->quantity;
+
+            $attributes_print[] = array('id' => $attr['id'] , 'attribute_id' => $attr['attribute_id'],
+            'value' => $attr['value'] , 'value_en' => $attr['value_en'] ,
+            'final_price' => $final_price);
+        }
+        return $attributes_print;
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class);

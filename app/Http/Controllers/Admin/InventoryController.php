@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Shop\Category;
 use App\Models\Shop\Discount;
 use App\Models\Shop\Product;
@@ -19,10 +20,10 @@ class InventoryController extends Controller
         $products = Product::orderBy('updated_at','DESC')->simplePaginate(10);
         $categories = Category::all();
         $discounts = Discount::all();
-        //$options = Option::all();
         $attributes = Attribute::with('attributeValues')->get();
+        $attribute_values = AttributeValue::get();
         return view('Admin.Inventory.index',['products'=>$products,'categories'=>$categories,'discounts'=>$discounts,
-                                             'attributes'=>$attributes]);
+                                             'attributes'=>$attributes,'attribute_values'=>$attribute_values]);
     }
 
     public function storeProduct(Request $request){
@@ -76,7 +77,11 @@ class InventoryController extends Controller
     public function editProductForm($id){
         $product = Product::findOrFail($id);
         $categories = Category::all();
-        return view('Admin.Inventory.edit_product_form',['product'=>$product,'categories'=>$categories]);
+        $discounts = Discount::all();
+        $attributes = Attribute::with('attributeValues')->get();
+        $attribute_values = AttributeValue::get();
+        return view('Admin.Inventory.edit_product_form',['product'=>$product,'categories'=>$categories,
+                                                        'discounts'=>$discounts,'attributes'=>$attributes,'attribute_values'=>$attribute_values]);
     }
 
     public function updateProduct(Request $request , $id){
@@ -188,6 +193,26 @@ class InventoryController extends Controller
                 'discount_id' => $discount->id,
             ]);
         }
+        return back();
+    }
+
+    public function storeAttribute(Request $request){
+        Attribute::create([
+            'name_en' => $request->name_en,
+            'name_ar' => $request->name_ar,
+        ]);
+        return back();
+    }
+
+    public function storeAttributeValue(Request $request){
+        AttributeValue::create([
+            'attribute_id' => $request->attribute,
+            'value' => $request->name_ar,
+            'value_en' => $request->name_en,
+            'price' => $request->price,
+            'value_type' => $request->type,
+        ]);
+
         return back();
     }
 }
