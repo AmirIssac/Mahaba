@@ -96,6 +96,30 @@
                     <td> <input type="number" step="100" name="min_weight" value="{{$product->min_weight}}" class="form-control"> </td>
                     <td> <input type="number" step="100" name="increase_by" value="{{$product->increase_by}}" class="form-control"> </td>
                 </tr>
+                                {{-- Attributes --}}
+                                <tr>
+                                    @foreach($attributes as $attribute)
+                                        <th>
+                                            {{ $attribute->name_ar }}
+                                            <select class="form-control" name="attribute_values[]" multiple>
+                                                @foreach($attribute->attributeValues as $attribute_value)
+                                                            @if($product_attr_vals->contains('id', $attribute_value->id))
+                                                                <option value="{{ $attribute_value->id }}" selected>
+                                                            @else
+                                                                <option value="{{ $attribute_value->id }}">
+                                                            @endif
+                                                                    {{ $attribute_value->value }}  +
+                                                                    @if($attribute_value->isValue())
+                                                                        {{ $attribute_value->price }}
+                                                                    @else
+                                                                        {{ $attribute_value->price }} %  من المنتج
+                                                                    @endif
+                                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </th>
+                                    @endforeach
+                                </tr>
                 <tr>
                     <th>
                         Primary image *
@@ -103,7 +127,7 @@
                     <?php $count = 1 ?>
                     @foreach($product->productImages as $additional_image)
                     <th>
-                        Image{{$count}} 
+                        Image{{$count}}
                     </th>
                     <?php $count++ ?>
                     @endforeach

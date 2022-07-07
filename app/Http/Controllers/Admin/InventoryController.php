@@ -76,12 +76,14 @@ class InventoryController extends Controller
 
     public function editProductForm($id){
         $product = Product::findOrFail($id);
+        $product_attribute_values = $product->attributeValues;
         $categories = Category::all();
         $discounts = Discount::all();
         $attributes = Attribute::with('attributeValues')->get();
         $attribute_values = AttributeValue::get();
         return view('Admin.Inventory.edit_product_form',['product'=>$product,'categories'=>$categories,
-                                                        'discounts'=>$discounts,'attributes'=>$attributes,'attribute_values'=>$attribute_values]);
+                                                         'discounts'=>$discounts,'attributes'=>$attributes,'attribute_values'=>$attribute_values,
+                                                         'product_attr_vals' => $product_attribute_values]);
     }
 
     public function updateProduct(Request $request , $id){
@@ -128,6 +130,9 @@ class InventoryController extends Controller
                 ]);
             }
         }
+        // update product attributes
+        $attribute_values = $request->attribute_values;
+        $product->attributeValues()->sync($attribute_values);
         return back();
     }
 
@@ -148,9 +153,7 @@ class InventoryController extends Controller
                     'discount_id' => $discount->id,
                 ]);
         }
-
         return back();
-
     }
 
     public function editDiscountForm($id){
