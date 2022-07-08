@@ -86,6 +86,13 @@ class LoginController extends Controller
                             'product_id' => $item['product_id'],
                             'quantity' => $item['quantity'],
                         ]);
+                        // add attributes to cart item
+                        $attributes = $item['attributes'];
+                        if(is_array($attributes) && $attributes)  // there is attributes to add
+                            for ($i = 0 ; $i < sizeof($attributes) ; $i++) {
+                                $attribute_value_id = $attributes[$i]['id'];  // attribute_value id
+                                $cartItem->attributeValues()->attach($attribute_value_id);
+                            }
                 }
             }
             Session::forget('cart');

@@ -38,7 +38,7 @@ class RegisterController extends Controller
      */
     //protected $redirectTo = RouteServiceProvider::HOME;
     public function redirectTo() {
-        $user = User::find(Auth::user()->id); 
+        $user = User::find(Auth::user()->id);
         if($user->hasRole(['super_admin']))
                     return '/dashboard';
         if($user->hasRole(['customer']))
@@ -77,7 +77,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    
+
     protected function create(array $data)
     {
         /*
@@ -118,13 +118,20 @@ class RegisterController extends Controller
                         'product_id' => $item['product_id'],
                         'quantity' => $item['quantity'],
                     ]);
+                    // add attributes to cart item
+                    $attributes = $item['attributes'];
+                    if(is_array($attributes) && $attributes)  // there is attributes to add
+                        for ($i = 0 ; $i < sizeof($attributes) ; $i++) {
+                            $attribute_value_id = $attributes[$i]['id'];  // attribute_value id
+                            $cartItem->attributeValues()->attach($attribute_value_id);
+                        }
             }
         }
         Session::forget('cart');
         //$user->assignRole('customer');
         return $user;
     }
-    
+
     /*
     protected function create(Request $request)
     {
