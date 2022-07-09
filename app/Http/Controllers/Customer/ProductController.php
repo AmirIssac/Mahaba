@@ -20,9 +20,13 @@ class ProductController extends Controller
     public function indexByCategory($id){
         $category = Category::findOrFail($id);
         $categories = Category::all();
-        $attributes_list = Attribute::get();
+        //$attributes_list = Attribute::get();
         $products = $category->products;
         if($products->count() == 1){ // enter the product directly
+            // I want just attribute collections that contain at least one attribute value attached to this product
+            $attributes_list = Attribute::has('attributeValues')->whereHas('attributeValues.products', function($q) use ($products){
+                $q->where('product_id', $products->first()->id);
+            })->get();
             $exist_rate = false ;
             $user_rate_value = 0 ;
             $rate = $products->first()->rating();
@@ -80,7 +84,11 @@ class ProductController extends Controller
 
     public function viewProduct($id){
         $product = Product::with('attributeValues.attribute')->findOrFail($id);
-        $attributes_list = Attribute::get();
+        //$attributes_list = Attribute::get();
+        // I want just attribute collections that contain at least one attribute value attached to this product
+        $attributes_list = Attribute::has('attributeValues')->whereHas('attributeValues.products', function($q) use ($product){
+            $q->where('product_id', $product->id);
+        })->get();
         $exist_rate = false ;
         $user_rate_value = 0 ;
         $rate = $product->rating();

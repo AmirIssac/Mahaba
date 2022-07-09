@@ -173,18 +173,6 @@
                 @elseif($product->isPiece())
                     <h4>  من أجل كل قطعة  </h4>
                 @endif
-                    {{--
-                    <input style="display: none"  id="weight-in-gram" type='number' name='weight' value="{{$product->unit == 'gram' ? $product->min_weight : $product->min_weight}}" readonly/>
-                    --}}
-                    {{--
-                    <div class="d-flex justify-content-center small text-warning mb-2">
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                    </div>
-                    --}}
                     <div style="display: flex; justify-content: space-around; padding:20px;">
                         @if($product->availability)
                         <button id="add-to-cart" class="btn view-btn"> <i class="fa fa-cart-plus"></i></button>
@@ -220,17 +208,32 @@
                     </div>
 
                     <div>
+                        {{-- Attributes Section --}}
+                        @php
+                                $radio_group = 1;
+                        @endphp
                         @foreach($attributes_list as $attribute)
                         {{ $attribute->name_ar }}
                         <br>
                         <br>
-                            @foreach($product->attributeValues as $attribute_value)
-                                    @if($attribute_value->attribute_id == $attribute->id)
-                                        {{ $attribute_value->value }}+
-                                        {{ $attribute_value->printAttributeValuePrice($product->id) }}
-                                        <input type="checkbox" name="attribute_values[]" class="attribute_values" value="{{ $attribute_value->id }}">
-                                    @endif
-                            @endforeach
+                            @if($attribute->isCheckBox())
+                                @foreach($product->attributeValues as $attribute_value)
+                                        @if($attribute_value->attribute_id == $attribute->id)
+                                            {{ $attribute_value->value }}+
+                                            {{ $attribute_value->printAttributeValuePrice($product->id) }}
+                                            <input type="checkbox" name="attribute_values[]" class="attribute_values" value="{{ $attribute_value->id }}">
+                                        @endif
+                                @endforeach
+                            @elseif($attribute->isRadio())
+                                @foreach($product->attributeValues as $attribute_value)
+                                        @if($attribute_value->attribute_id == $attribute->id)
+                                            {{ $attribute_value->value }}+
+                                            {{ $attribute_value->printAttributeValuePrice($product->id) }}
+                                            <input type="radio" name="attribute_values{{$radio_group}}[]" class="attribute_values" value="{{ $attribute_value->id }}">
+                                        @endif
+                                @endforeach
+                                @php $radio_group++; @endphp
+                            @endif
                         <br>
                         @endforeach
                     </div>
@@ -291,7 +294,7 @@ function addToCartNotification(from, align){
            // var attribute_values = $('.attribute_values').val();
            //alert($('input[name="attribute_values[]"]:checked').serialize());
            // all attribute values checked
-           var attribute_values = $('input[name="attribute_values[]"]:checked').serializeArray();
+           var attribute_values = $('input[class="attribute_values"]:checked').serializeArray();
           // console.log(attribute_values).serializeArray();
            //var attribute_values = $('input:checkbox:checked').val();
            //var formData        = $('input[name="attribute_values[]"]:checked').serializeArray();

@@ -9,10 +9,24 @@ class Attribute extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name_en' , 'name_ar'];
+    protected $fillable = ['name_en' , 'name_ar' , 'type'];
 
     public function attributeValues()
     {
         return $this->hasMany(AttributeValue::class);
+    }
+
+    public function isCheckBox(){
+        if($this->type == 'checkbox')
+            return true;
+        else
+            return false;
+    }
+
+    public function isRadio(){
+        if($this->type == 'radio')
+            return true;
+        else
+            return false;
     }
 }

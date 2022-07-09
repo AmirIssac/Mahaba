@@ -292,6 +292,9 @@
                   <th>
                     Name AR
                   </th>
+                  <th>
+                    Collection type
+                  </th>
                   <th class="text-right">
                     Actions
                   </th>
@@ -305,6 +308,9 @@
                     <td>
                       {{$attribute->name_ar}}
                     </td>
+                    <td>
+                        {{($attribute->isCheckbox() ? 'Multi' : 'Just one')}}
+                    </td>
                     <td class="text-right">
                       <a><i class="fas fa-tools"></i></a>
                     </td>
@@ -314,6 +320,7 @@
                       <td>
                       <button id="new-attribute-btn" class="btn btn-success">New</button>
                       </td>
+                      <td></td><td></td><td></td>
                   </tr>
                 </tbody>
               </table>
@@ -341,15 +348,24 @@
                       <th>
                         Name AR
                       </th>
+                      <th>
+                        Collection type
+                      </th>
                     </thead>
                     <tbody>
                       <tr>
                           <td> <input type="text" name="name_en" class="form-control" required> </td>
                           <td> <input type="text" name="name_ar" class="form-control" required> </td>
+                          <td>
+                             <select name="type" class="form-control" required>
+                                <option value="checkbox">Multi</option>
+                                <option value="radio">just one</option>
+                             </select>
+                          </td>
                       </tr>
                       <tr>
                         <td><button class="btn btn-primary">Confirm</button></td>
-                        <td></td>
+                        <td></td><td></td>
                       </tr>
                     </tbody>
                 </table>
@@ -413,6 +429,7 @@
                       <td>
                       <button id="new-attribute-value-btn" class="btn btn-success">New</button>
                       </td>
+                      <td></td><td></td><td></td><td></td>
                   </tr>
                 </tbody>
               </table>
@@ -471,6 +488,7 @@
               <tr>
                 <td><button class="btn btn-primary">Confirm</button></td>
                 <td></td>
+                <td></td><td></td><td></td>
               </tr>
             </tbody>
         </table>

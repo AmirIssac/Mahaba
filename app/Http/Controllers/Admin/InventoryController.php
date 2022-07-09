@@ -203,6 +203,7 @@ class InventoryController extends Controller
         Attribute::create([
             'name_en' => $request->name_en,
             'name_ar' => $request->name_ar,
+            'type' => $request->type,
         ]);
         return back();
     }

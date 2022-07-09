@@ -68,7 +68,7 @@
                                 </div>
                                 <div style="margin: 10px 0 0 0;" class="col-lg-4 col-md-4">
                                     <label>Address</label>
-                                    <input type="text" name="address_address" value="{{ $profile->address_address }}" id="address">
+                                    <input type="text" name="address_address" value="{{ $profile->address_address }}" placeholder="enter your full address" id="address">
                                     <input type="hidden" name="address_latitude" id="latitude">
                                     <input type="hidden" name="address_longitude" id="longitude">
                                 </div>
