@@ -68,6 +68,7 @@ Route::group(['middleware'=>['auth','is_employee']] , function(){
     Route::group(['middleware'=>['employee_order_access']] , function(){
         Route::get('/employee/edit/order/{order_id}',[App\Http\Controllers\Employee\OrderController::class, 'editOrder'])->name('employee.edit.order');
         Route::post('/employee/accept/order/{order_id}',[App\Http\Controllers\Employee\OrderController::class, 'acceptOrder'])->name('employee.accept.order');
+        Route::post('/employee/reject/order/{order_id}',[App\Http\Controllers\Employee\OrderController::class, 'rejectOrder'])->name('employee.reject.order');
         Route::post('/employee/change/orderStatus/{order_id}',[App\Http\Controllers\Employee\OrderController::class, 'changeStatus'])->name('employee.change.order.status');
         Route::get('/print/delivery/order/{order_id}',[App\Http\Controllers\Employee\OrderController::class, 'printDeliveryOrder'])->name('print.delivery.order');
     });

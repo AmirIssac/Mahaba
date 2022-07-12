@@ -229,11 +229,26 @@
                         <td>
                             <b>Accept order ?</b>
                         </td>
+                        {{-- Accept --}}
                         <form action="{{route('employee.accept.order',$order->id)}}" method="POST">
                           @csrf
                             <td style="font-weight: bold" class="text-center">
-                            <button type="submit" class="btn btn-success">Accept</button>
+                            <button type="submit" class="btn btn-success">Prepare</button>
                             </td>
+                        </form>
+                        {{-- Reject --}}
+                        <form action="{{route('employee.reject.order',$order->id)}}" method="POST">
+                            @csrf
+                                <td>
+                                        <button type="submit" class="btn btn-danger">Reject</button>
+                                </td>
+                                <td>
+                                        <select name="reject_reason" id="reject-reasons" class="form-control" style="background-color: #c00202; color:white">
+                                            @foreach($reject_reasons as $reject_reason)
+                                                <option value="{{$reject_reason->id}}">{{$reject_reason->name_en}}</option>
+                                            @endforeach
+                                        </select>
+                                </td>
                         </form>
                         <td style="font-weight: bold" class="text-center">
                         </td>

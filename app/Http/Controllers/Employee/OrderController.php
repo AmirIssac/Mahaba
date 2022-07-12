@@ -118,6 +118,37 @@ class OrderController extends Controller
         return back();
     }
 
+    public function rejectOrder(Request $request,$id){
+        $order = Order::findOrFail($id);
+        // validate that this order reference for this employee store
+        $store_id = $order->store->id;
+        $check_related = User::whereHas('stores', function($q) use ($store_id) {
+                $q->where('stores.id', $store_id);
+            })->where('users.id',Auth::user()->id)->count();
+        if($check_related < 1)  // the order is not in the store that this employee work
+                return back();
+        // validate this order status is pending
+        if($order->status != 'pending')
+            return back();
+
+        $order->update([
+            'status' => 'rejected',
+        ]);
+        $order_system = OrderSystem::create([
+            'order_id' => $order->id ,
+            'user_id' => Auth::user()->id ,
+            'status' => 'rejected' ,
+        ]);
+        // rejection note
+        $reason_id = $request->reject_reason;
+            $order->rejectReasons()->attach($reason_id);
+            $reason_note = RejectReason::find($reason_id);
+            $order_system->update([
+                    'employee_note' => $reason_note->name_en,
+            ]);
+        return back();
+    }
+
     public function changeStatus(Request $request , $id){
         $order = Order::findOrFail($id);
         // validate
@@ -167,7 +198,7 @@ class OrderController extends Controller
                 $orders->add($store_order);
         }
         // $last_updated_pending_order = $orders->first();
-        $new_orders_count = $orders->where('updated_at' , '>' ,  Carbon::parse($request->updated_at) )->count(); 
+        $new_orders_count = $orders->where('updated_at' , '>' ,  Carbon::parse($request->updated_at) )->count();
         //return response($orders->first());
         return response($new_orders_count);
     }
