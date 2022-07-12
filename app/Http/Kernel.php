@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
         'customer_order_check' => \App\Http\Middleware\CustomerOrderCheck::class,
         'employee_order_access' => \App\Http\Middleware\EmployeeOrderAccess::class,
         'submit_order' => \App\Http\Middleware\SubmitOrder::class,
+        'is_guest' => \App\Http\Middleware\isGuest::class,
     ];
 }

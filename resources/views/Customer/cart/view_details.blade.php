@@ -147,7 +147,7 @@
                         <td>
                             <form action="{{route('delete.cart.item',$item->id)}}" method="POST">
                                 @csrf
-                                <button style="border: none; background-color: transparent" class="btn btn-danger" onclick="javascript:this.form.submit();"><i class="fa-solid fa-delete-left"></i></button>
+                                <button style="border: none; background-color: transparent" class="btn btn-danger" onclick="javascript:this.form.submit();">delete</button>
                             </form>
                         </td>
                     </tr>

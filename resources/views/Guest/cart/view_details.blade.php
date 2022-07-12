@@ -112,7 +112,7 @@
                         <td>
                             <form action="{{route('delete.cart.item',$item->id)}}" method="POST">
                                 @csrf
-                                <button style="border: none; background-color: transparent" class="btn btn-danger" onclick="javascript:this.form.submit();"><i class="fa-solid fa-delete-left"></i></button>
+                                <button style="border: none; background-color: transparent" class="btn btn-danger" onclick="javascript:this.form.submit();">delete</button>
                             </form>
                         </td>
                     </tr>
@@ -180,13 +180,14 @@
                                         <h5>{{$item->name_en}}</h5>
 
                                             @if($item->isGram())
-                                                +
+
                                                 <p id="attr-item-total{{$counter}}">
                                                     @php
-                                                        $attr_total = 0 ;
                                                     @endphp
                                                     @foreach($item->attributes as $attr_val)
+                                                        +
                                                         @php
+                                                            $attr_total = 0 ;
                                                            // $percent = $attr_val['price'];
                                                             //$attr_cost = $item->pri
                                                             $attr_val_obj = App\Models\AttributeValue::find($attr_val['id']);
@@ -195,17 +196,19 @@
                                                             elseif($attr_val_obj->isPercent())
                                                                 $attr_total+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity
                                                         @endphp
+                                                        {{  $attr_total  }}
                                                     @endforeach
-                                                    {{  $attr_total  }}
+
                                                 </p>
                                             @else {{-- piece --}}
-                                                +
                                                 <p id="attr-item-total{{$counter}}">
                                                     @php
-                                                        $attr_total = 0 ;
+
                                                     @endphp
                                                     @foreach($item->attributes as $attr_val)
+                                                        +
                                                         @php
+                                                            $attr_total = 0 ;
                                                             // $percent = $attr_val['price'];
                                                             //$attr_cost = $item->pri
                                                             $attr_val_obj = App\Models\AttributeValue::find($attr_val['id']);
@@ -214,8 +217,8 @@
                                                             elseif($attr_val_obj->isPercent())
                                                                 $attr_total+=$attr_val_obj->printAttributeValuePrice($item->id);
                                                         @endphp
+                                                        {{  $attr_total  }}
                                                     @endforeach
-                                                    {{  $attr_total  }}
                                                 </p>
                                             @endif
 
@@ -312,12 +315,10 @@
                                             @endif
                                     </td>
                                     <td>
-                                        {{--
-                                        <form action="{{route('delete.cart.item',$item->id)}}" method="POST">
+                                        <form action="{{route('delete.guest.cart.item',$counter)}}" method="POST">
                                             @csrf
-                                            <button style="border: none; background-color: transparent" class="btn btn-danger" onclick="javascript:this.form.submit();"><i class="fa-solid fa-delete-left"></i></button>
+                                            <button style="border: none; background-color: transparent" class="btn btn-danger" onclick="javascript:this.form.submit();">delete</button>
                                         </form>
-                                        --}}
                                     </td>
                                 </tr>
                                 <?php $counter++; ?>

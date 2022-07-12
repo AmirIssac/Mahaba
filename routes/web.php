@@ -117,12 +117,15 @@ Route::get('/sign-up', [Controller::class, 'signUpForm'])->name('sign.up');
 Route::get('/by-category/{category_id}', [ProductController::class, 'indexByCategory'])->name('index.by.category');
 Route::get('/filter', [ProductController::class, 'filter'])->name('filter');
 Route::get('/product/{product_id}', [ProductController::class, 'viewProduct'])->name('view.product');
-Route::get('/view/guest-cart', [CartController::class, 'viewGuestCart'])->name('view.guest.cart');
 Route::post('/add/product/toCart/{product_id}', [ProductController::class, 'addProductToCart'])->name('add.product.to.cart');
 Route::post('/delete/cart/item/{cart_item}', [CartController::class, 'deleteCartItem'])->name('delete.cart.item');
 Route::post('/delete/cart/content/{cart_id?}', [CartController::class, 'deleteCartContent'])->name('delete.cart.content');
+Route::post('/delete/guest/cart/item/{index}', [CartController::class, 'deleteGuestCartItem'])->name('delete.guest.cart.item');
 //Route::post('/update/product/inCart/{product_id}', [ProductController::class, 'updateProductCart'])->name('update.product.in.cart');
-
+// guest middleware for specific routes
+Route::group(['middleware'=>['is_guest']] , function(){
+    Route::get('/view/guest-cart', [CartController::class, 'viewGuestCart'])->name('view.guest.cart');
+});
 Route::get('/contact-us', [ContactController::class, 'contactUs'])->name('contact.us');
 Route::post('/store-contact-form', [ContactController::class, 'storeContactForm'])->name('store.contact.form');
 

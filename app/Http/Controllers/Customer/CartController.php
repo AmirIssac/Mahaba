@@ -135,6 +135,14 @@ class CartController extends Controller
         return back();
     }
 
+    // guest
+    public function deleteGuestCartItem($index){
+        $cart = Session::get('cart');
+        array_splice($cart, $index, 1);
+        Session::put('cart',$cart);
+        return back();
+    }
+
     public function deleteCartContent($id = 'session_cart'){   // default value because its a optional parameter
         if($id != 'session_cart'){
             $cart = Cart::findOrFail($id);
