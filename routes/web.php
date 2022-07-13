@@ -54,6 +54,8 @@ Route::group(['middleware'=>['is_admin','auth']] , function(){
         Route::get('/roles-permissions',[App\Http\Controllers\Admin\PermissionController::class, 'rolesAndPermissionsIndex'])->name('roles.permissions');
         Route::get('/dashboard-messages',[App\Http\Controllers\Admin\SettingController::class, 'showMessages'])->name('dashboard.messages');
         Route::get('/dashboard-view-message/{message_id}',[App\Http\Controllers\Admin\SettingController::class, 'viewMessage'])->name('dashboard.view.message');
+        Route::get('/add-employee',[UserDashboardContoller::class, 'addEmployee'])->name('add.employee');
+        Route::post('/store-employee',[UserDashboardContoller::class, 'storeEmployee'])->name('store.employee');
 });
 /*
 Route::get('/login-form',function(){

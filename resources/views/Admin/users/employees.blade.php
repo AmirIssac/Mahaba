@@ -54,6 +54,12 @@
                         </td>
                     </tr>
                 @endforeach
+                <tr>
+                    <td>
+                        <a href="{{ route('add.employee') }}" class="btn btn-success">New Employee</a>
+                    </td>
+                    <td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
               </tbody>
             </table>
           </div>

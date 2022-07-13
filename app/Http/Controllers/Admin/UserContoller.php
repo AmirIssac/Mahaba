@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shop\Cart;
+use App\Models\Shop\Favorite;
+use App\Models\Shop\Profile;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -76,7 +79,39 @@ class UserContoller extends Controller
         ]);
         // attach stores
         $user->stores()->sync($request->stores);
-        Session::flash('success', 'Updated successfully'); 
+        Session::flash('success', 'Updated successfully');
+        return back();
+    }
+
+    public function addEmployee(){
+        $stores = Store::get();
+        return view('Admin.users.add_employee',['stores'=>$stores]);
+    }
+
+    public function storeEmployee(Request $request){
+        $user = User::create([
+            'name' => $request->first_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        Profile::create([
+            'user_id' => $user->id,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone' => $request->phone,
+            'address_address' => $request->address,
+            'address_latitude' => null,
+            'address_longitude' => null,
+        ]);
+        Cart::create([
+            'user_id' => $user->id,
+        ]);
+        Favorite::create([
+            'user_id' => $user->id,
+        ]);
+        $user->assignRole('employee');
+        $store_id = $request->store_id;
+        $user->stores()->attach($store_id);
         return back();
     }
 }
