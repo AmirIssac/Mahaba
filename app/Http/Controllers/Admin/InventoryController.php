@@ -20,6 +20,17 @@ class InventoryController extends Controller
         $products = Product::orderBy('updated_at','DESC')->simplePaginate(10);
         $categories = Category::all();
         $discounts = Discount::all();
+        // change discount status activity by expiry
+        foreach($discounts as $discount){
+            if($discount->expired_at < now())
+                $discount->update([
+                    'active' => 0
+                ]);
+            elseif($discount->expired_at > now() && !$discount->active)
+                $discount->update([
+                    'active' => 1 ,
+                ]);
+        }
         $attributes = Attribute::with('attributeValues')->get();
         $attribute_values = AttributeValue::get();
         return view('Admin.Inventory.index',['products'=>$products,'categories'=>$categories,'discounts'=>$discounts,
@@ -158,6 +169,14 @@ class InventoryController extends Controller
 
     public function editDiscountForm($id){
         $discount = Discount::find($id);
+        if($discount->expired_at < now())
+                $discount->update([
+                    'active' => 0
+                ]);
+        elseif($discount->expired_at > now() && !$discount->active)
+                $discount->update([
+                    'active' => 1 ,
+                ]);
         $products = Product::all();
         return view('Admin.Inventory.edit_discount_form',['discount'=>$discount,'products' => $products]);
     }
@@ -174,7 +193,7 @@ class InventoryController extends Controller
         $discount->update([
             'type' => $type ,
             'value' => $value ,
-            'expired_at' => $expired_at ,
+            'expired_at' => $expired_at ? $expired_at : $discount->expired_at ,
             'active' => $status ,
         ]);
         // update products
@@ -196,7 +215,8 @@ class InventoryController extends Controller
                 'discount_id' => $discount->id,
             ]);
         }
-        return back();
+        //return back();
+        return redirect(route('edit.discount.form',$id));
     }
 
     public function storeAttribute(Request $request){

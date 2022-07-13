@@ -89,7 +89,7 @@ class Product extends Model
     }
 
     public function hasDiscount(){
-        if($this->discount && $this->discount->active)
+        if($this->discount && $this->discount->expired_at > now())
             return true;
         else
             return false;

@@ -67,7 +67,8 @@
                     </select>
                 </td>
                 <td>
-                    <input type="datetime" name="expired_at" value="{{$discount->expired_at}}" class="form-control">
+                    <span>{{ $discount->expired_at }}</span>
+                    <input type="date" name="expired_at" class="form-control">
                 </td>
                 <td>
                   {{--
@@ -82,9 +83,13 @@
                     </select>
                   --}}
                   @if($discount->active)
+                  <span class="badge badge-success">
                       active
+                  </span>
                   @else
+                  <span class="badge badge-danger">
                       inactive
+                  </span>
                   @endif
                 </td>
                </tr>

@@ -20,7 +20,7 @@ class CreateDiscountsTable extends Migration
             $table->enum('type',['percent','value']);
             $table->decimal('value',10,2);
             $table->boolean('active');
-            $table->timestamp('expired_at');
+            $table->timestamp('expired_at');  // must remove current timestamp default value and on update
             $table->timestamps();
         });
     }
