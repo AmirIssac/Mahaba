@@ -117,8 +117,12 @@
                           <p id="estimated-time-div"></p>
                         </td>
                         @else
-                        <td style="color: #0254c0; font-weight: bold" class="text-center">
-                            <p>{{$done_in}}</p>
+                        <td style="font-weight: bold" class="text-center">
+                            @if($done_in['check'] == false)
+                                <span class="badge badge-danger">{{$done_in['finished_time']}}</span>
+                            @else
+                                <span class="badge badge-success">{{$done_in['finished_time']}}</span>
+                            @endif
                         </td>
                         @endif
                     </td>

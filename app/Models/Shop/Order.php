@@ -36,7 +36,7 @@ class Order extends Model
     ];
 
     protected $dates = ['estimated_time'];
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -77,22 +77,29 @@ class Order extends Model
         return $this->belongsToMany(RejectReason::class);
     }
 
-    /* 
+    /*
         calc the time between creating the order by customer
-        and delivery or reject status
+        and delivery or reject status (finished status)
     */
-    public function finishedIn(){   
+    public function finishedIn(){
         if($this->status == 'delivered' || $this->status == 'rejected'){
             $last_process_time = $this->orderSystems->last()->created_at;
             //$done_in = $last_process_time->diffInSeconds($this->created_at);
             //$done_in = gmdate('H:i:s', $done_in);
             $interval = $last_process_time->diff($this->created_at);
             $done_in = $interval->format('%ad %H:%I:%S');
-            return $done_in ;
+            // return the array(Time $finished_time && Boolean $check !!-- late or not !!)
+            $estimated_time = $this->estimated_time->diff($this->created_at);
+            $estimated_time = $estimated_time->format('%ad %H:%I:%S');
+            $check = false;
+            if($estimated_time > $done_in)
+                $check = true;
+            $finished_arr = array('finished_time' => $done_in,'check' => $check);
+            return $finished_arr;
         }
         else{
-            $done_in = false;
-            return $done_in;
+            $finished_arr = false;
+            return $finished_arr;
         }
     }
 }

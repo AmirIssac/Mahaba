@@ -39,7 +39,7 @@ class OrderController extends Controller
     */
     public function index(){
         //$orders = Order::where('status','!=','rejected')->orderBy('store_id')->orderBy('created_at','DESC')->simplePaginate(15);
-        $orders = Order::orderBy('status')->orderBy('store_id')->orderBy('created_at','DESC')->simplePaginate(15);        
+        $orders = Order::orderBy('status')->orderBy('store_id')->orderBy('created_at','DESC')->simplePaginate(15);
         // orders statistics
         $pending = 0 ;
         $preparing = 0 ;
@@ -71,7 +71,6 @@ class OrderController extends Controller
         $order_discount = $order->discountDetail;
         $estimated_time = $order->estimated_time;
         $done_in = $order->finishedIn();
-
         if($order_center_system){
             $order_employee_systems = $order->orderSystems()->where('id','!=',$order_center_system->id)->get();
             return view('Admin.orders.edit',['order'=>$order,'stores'=>$stores,'order_items'=>$order_items,'order_store'=>$order_store,
