@@ -15,6 +15,7 @@
       <div class="card">
         <div class="card-header">
           <h4 class="card-title">Products</h4>
+          <a href="{{ route('products.filter','most_wanted') }}" class="btn btn-info">most wanted</a>
         </div>
         <div class="card-body">
           <div class="table-responsive">

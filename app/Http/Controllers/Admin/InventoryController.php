@@ -7,9 +7,11 @@ use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Shop\Category;
 use App\Models\Shop\Discount;
+use App\Models\Shop\OrderItem;
 use App\Models\Shop\Product;
 use App\Models\Shop\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class InventoryController extends Controller
@@ -238,5 +240,28 @@ class InventoryController extends Controller
         ]);
 
         return back();
+    }
+
+    public function filter($filter_name){
+        if($filter_name == 'most_wanted'){
+            $result = DB::table('order_items')
+                 ->select('product_id', DB::raw('count(*) as total'))
+                 ->groupBy('product_id')
+                 ->orderBy('total','DESC')
+                 ->limit(5)
+                 ->get();  // get product_id with total
+            $products = $result->map(function ($product){
+                    $item = Product::find($product->product_id);
+                    return [
+                        'sku'            => $item->code,
+                        'name'         => $item->name_en,
+                        'requested'     => $product->total,
+                    ];
+                });
+            return view('Admin.Inventory.most_wanted_products',['products'=>$products]);
+        }
+        else{
+            abort(404);
+        }
     }
 }

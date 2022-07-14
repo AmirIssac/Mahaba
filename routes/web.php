@@ -56,6 +56,7 @@ Route::group(['middleware'=>['is_admin','auth']] , function(){
         Route::get('/dashboard-view-message/{message_id}',[App\Http\Controllers\Admin\SettingController::class, 'viewMessage'])->name('dashboard.view.message');
         Route::get('/add-employee',[UserDashboardContoller::class, 'addEmployee'])->name('add.employee');
         Route::post('/store-employee',[UserDashboardContoller::class, 'storeEmployee'])->name('store.employee');
+        Route::get('/products/filter/{filter_name}',[AdminInventoryController::class, 'filter'])->name('products.filter');
 });
 /*
 Route::get('/login-form',function(){
