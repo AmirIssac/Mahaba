@@ -411,10 +411,10 @@
                             </ul>
                             <h6>Don't have an account ?</h6>
                             <a style="color: #7fad39; font-weight: bold;" href="{{route('sign.up')}}">sign up</a>
-                            {{--
+
                             |
                             <a style="color: #5556a7; font-weight: bold;" href="{{route('checkout.guest')}}">continue as a guest</a>
-                            --}}
+
                         </form>
                     </div>
                 </div>

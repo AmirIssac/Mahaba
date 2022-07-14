@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\AttributeValue;
 use App\Models\DiscountDetail;
 use App\Models\OrderSystem;
 use App\Models\Setting;
@@ -62,35 +63,41 @@ class OrderController extends Controller
             foreach($cart as $c_item){
                 $item = Product::find($c_item['product_id']);  // but we have to take quantity too (its not stored in product object its stored in cart_item table and we dont have cart_item in session process)
                 $item->quantity = $c_item['quantity'];
+                $item->attributes = $c_item['attributes'];
                 $cart_items->add($item);
             }
             foreach($cart_items as $item){
                 if($item->hasDiscount()){
                     if($item->isPercentDiscount()){
-                         $discount = $item->price * $item->discount->value / 100;
-                         $new_price = $item->price - $discount;
-                         if($item->unit == 'gram')
-                            $total_order_price += $new_price * $item->quantity / 1000 ;
-                         else
-                            $total_order_price += $new_price * $item->quantity;
-                         }
-                    else {
-                         $new_price = $item->price - $item->discount->value;
-                         if($item->unit == 'gram')
-                            $total_order_price += $new_price * $item->quantity / 1000 ;
-                         else
-                            $total_order_price += $new_price * $item->quantity;
+                                $discount = $item->price * $item->discount->value / 100;
+                                if($item->isGram())
+                                    $total_order_price = $total_order_price +  (($item->price - $discount) * $item->quantity / 1000);
+                                else
+                                    $total_order_price = $total_order_price +  ($item->price - $discount) * $item->quantity;
+                                }
+                    else{
+                                if($item->isGram())
+                                    $total_order_price = $total_order_price +  (($item->price - $item->discount->value) * $item->quantity / 1000);
+                                else
+                                    $total_order_price = $total_order_price +  ($item->price - $item->discount->value) * $item->quantity;
                     }
                 }
-                else{   // no discount
-                    if($item->unit == 'gram')
-                         $total_order_price += $item->price * $item->quantity / 1000  ;
+                else  // no discount for this item
+                    if($item->isGram())
+                            $total_order_price = $total_order_price + ($item->price * $item->quantity / 1000);
                     else
-                         $total_order_price += $item->price * $item->quantity;
+                            $total_order_price = $total_order_price + ($item->price * $item->quantity);
+                // add attr_vals costs
+                foreach ($item->attributes as $attr_val) {
+                    $attr_val_obj = AttributeValue::find($attr_val['id']);
+                    if ($attr_val_obj->isValue()) {
+                        $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id);
+                    } elseif ($attr_val_obj->isPercent()) {
+                        $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity;
+                    }
                 }
             }
             $hours_remaining_to_deliver = $guest->calculateGuestDeliverTime();
-
             return view('Guest.order.checkout',['cart'=>$cart , 'cart_items' => $cart_items,'date' => $date, 'total_order_price' => $total_order_price,'tax'=>$tax,'guest'=>$guest,
                                                 'hours_remaining_to_deliver' => $hours_remaining_to_deliver]);
         }
