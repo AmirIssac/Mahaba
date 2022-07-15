@@ -28,7 +28,7 @@
             <div class="row bg-second">
                 <div class="col-lg-6 text-second">
                     <h4>Billing Details</h4>
-                    <form action="{{route('submit.order')}}" method="POST">
+                    <form action="{{route('submit.order.as.guest')}}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-lg-8 col-md-6">

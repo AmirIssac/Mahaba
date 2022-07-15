@@ -272,7 +272,9 @@ class ProductController extends Controller
                     for ($i = 0 ; $i < sizeof($attribute_values_jquery_serialized) ; $i++) {
                         $attribute_value_id = $attribute_values_jquery_serialized[$i]['value'];  // attribute_value id
                         $attr = AttributeValue::find($attribute_value_id);
-                        $attributes[] = array('id' => $attr->id , 'price' => $attr->price , 'value_type' => $attr->value_type);
+                        //$attributes[] = array('id' => $attr->id , 'price' => $attr->price , 'value_type' => $attr->value_type);
+                        $attributes[] = array('id' => $attr->id ,'attribute_id' => $attr->attribute_id ,'value'=>$attr->value,
+                                              'value_en'=>$attr->value_en,'value_type' => $attr->value_type, 'price' => $attr->price ,);
                     }
                 }
                 $cart_item = array('product_id'=>$product->id,'quantity'=>$request->quantity,'attributes'=>$attributes);
@@ -288,7 +290,9 @@ class ProductController extends Controller
                         for ($i = 0 ; $i < sizeof($attribute_values_jquery_serialized) ; $i++) {
                             $attribute_value_id = $attribute_values_jquery_serialized[$i]['value'];  // attribute_value id
                             $attr = AttributeValue::find($attribute_value_id);
-                            $attributes[] = array('id' => $attr->id , 'price' => $attr->price , 'value_type' => $attr->value_type);
+                            //$attributes[] = array('id' => $attr->id , 'price' => $attr->price , 'value_type' => $attr->value_type);
+                            $attributes[] = array('id' => $attr->id ,'attribute_id' => $attr->attribute_id ,'value'=>$attr->value,
+                                                  'value_en'=>$attr->value_en,'value_type' => $attr->value_type, 'price' => $attr->price ,);
                         }
                     }
                     $cart_item = array('product_id'=>$product->id,'quantity'=>$request->quantity,'attributes'=>$attributes);
