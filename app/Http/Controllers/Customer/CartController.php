@@ -28,7 +28,11 @@ class CartController extends Controller
         $tax = (float) $tax_row->value;
         $min_order = (float) $min_order_row->value;
         $cart_total = $cart->getTotal();
+        $tax_value = $tax * $cart_total / 100 ;
+        $cart_grand_total = $cart_total + $tax_value ;
+        $cart_grand_total = number_format((float)$cart_grand_total, 2, '.', '');
         return view('Customer.cart.view_details',['cart'=>$cart,'cart_items'=>$cart_items,'cart_total' => $cart_total,'tax'=>$tax,
+                                                  'cart_grand_total' => $cart_grand_total ,
                                                   'min_order' => $min_order,'points'=>$points,'one_percent_discount'=>$one_percent_discount
                                                     ]);
     }
@@ -123,8 +127,11 @@ class CartController extends Controller
             }
         }
         }
+        $tax_value = $tax * $cart_total / 100 ;
+        $cart_grand_total = $cart_total + $tax_value ;
+        $cart_grand_total = number_format((float)$cart_grand_total, 2, '.', '');
         return view('Guest.cart.view_details',['cart'=>$cart,'cart_items'=>$cart_items,'cart_total' => $cart_total,'tax'=>$tax,
-                                                    'min_order'=>$min_order]);
+                                                  'cart_grand_total' => $cart_grand_total ,  'min_order'=>$min_order]);
     }
 
     public function deleteCartItem($id){

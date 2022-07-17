@@ -194,10 +194,6 @@
                         <ul>
                             <li>Subtotal <span id="cart-subtotal">{{$cart_total}} AED</span></li>
                             <li>Tax <span id="cart-subtotal">{{$tax}}%</span></li>
-                            <?php $tax_value = $tax * $cart_total / 100 ;
-                                $cart_grand_total = $cart_total + $tax_value ;
-                                $cart_grand_total = number_format((float)$cart_grand_total, 2, '.', '');
-                            ?>
                             <li><h3><b>Total <span id="cart-total">{{$cart_grand_total}} AED</span></b></h3></li>
                         </ul>
                         <input type="hidden" id="min-order-val" value="{{$min_order}}">

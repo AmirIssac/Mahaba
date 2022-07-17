@@ -47,7 +47,11 @@ class OrderController extends Controller
         $tax_row = Setting::where('key','tax')->first();
         $tax = (float) $tax_row->value;
         $total_order_price = $cart->getTotal();
+        $tax_value = $tax * $total_order_price / 100 ;
+        $order_grand_total = $total_order_price + $tax_value ;
+        $order_grand_total = number_format((float)$order_grand_total, 2, '.', '');
         return view('Customer.order.checkout',['cart'=>$cart , 'cart_items' => $cart_items,'date' => $date, 'total_order_price' => $total_order_price,
+                                                'order_grand_total' => $order_grand_total,
                                                'profile'=>$profile,'tax'=>$tax,'hours_remaining_to_deliver' => $hours_remaining_to_deliver]);
     }
 
@@ -100,9 +104,12 @@ class OrderController extends Controller
                     }
                 }
             }
+            $tax_value = $tax * $total_order_price / 100 ;
+            $order_grand_total = $total_order_price + $tax_value ;
+            $order_grand_total = number_format((float)$order_grand_total, 2, '.', '');
             $hours_remaining_to_deliver = $guest->calculateGuestDeliverTime();
             return view('Guest.order.checkout',['cart'=>$cart , 'cart_items' => $cart_items,'date' => $date, 'total_order_price' => $total_order_price,'tax'=>$tax,'guest'=>$guest,
-                                                'hours_remaining_to_deliver' => $hours_remaining_to_deliver]);
+                                                'order_grand_total' => $order_grand_total,'hours_remaining_to_deliver' => $hours_remaining_to_deliver]);
         }
     }
 
@@ -466,6 +473,8 @@ class OrderController extends Controller
     public function trackByReference(Request $request){
         $reference = $request->reference;
         $guest_ref = GuestReference::where('reference',$reference)->first();
+        if(!$guest_ref)
+            abort(404);
         $order = $guest_ref->order;
         $order_items = $order->orderItems;
         if($order->orderSystems()->count() > 0){

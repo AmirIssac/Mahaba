@@ -8,6 +8,7 @@ use App\Models\Shop\PaymentDetail;
 use App\Models\Shop\Profile;
 use App\Models\Shop\Transaction;
 use App\Models\Shop\Favorite;
+use App\Models\Shop\Product;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -178,6 +179,55 @@ class User extends Authenticatable
         }
 
     }
+
+    /*
+    public function getGuestTotalCart($cart , &$cart_items){
+        //$cart_items = collect();
+        //return $cart;
+        $total_order_price = 0 ;
+        foreach($cart as $c_item){
+            $item = Product::find($c_item['product_id']);  // but we have to take quantity too (its not stored in product object its stored in cart_item table and we dont have cart_item in session process)
+            $item->quantity = $c_item['quantity'];
+            $item->attributes = $c_item['attributes'];
+            $cart_items->add($item);
+            return $cart_items;
+        }
+        return $cart_items;
+
+        foreach($cart_items as $item){
+            if($item->hasDiscount()){
+                if($item->isPercentDiscount()){
+                            $discount = $item->price * $item->discount->value / 100;
+                            if($item->isGram())
+                                $total_order_price = $total_order_price +  (($item->price - $discount) * $item->quantity / 1000);
+                            else
+                                $total_order_price = $total_order_price +  ($item->price - $discount) * $item->quantity;
+                            }
+                else{
+                            if($item->isGram())
+                                $total_order_price = $total_order_price +  (($item->price - $item->discount->value) * $item->quantity / 1000);
+                            else
+                                $total_order_price = $total_order_price +  ($item->price - $item->discount->value) * $item->quantity;
+                }
+            }
+            else  // no discount for this item
+                if($item->isGram())
+                        $total_order_price = $total_order_price + ($item->price * $item->quantity / 1000);
+                else
+                        $total_order_price = $total_order_price + ($item->price * $item->quantity);
+            // add attr_vals costs
+            foreach ($item->attributes as $attr_val) {
+                $attr_val_obj = AttributeValue::find($attr_val['id']);
+                if ($attr_val_obj->isValue()) {
+                    $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id);
+                } elseif ($attr_val_obj->isPercent()) {
+                    $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity;
+                }
+            }
+        }
+        return $total_order_price;
+    }
+    */
 
     public function maxAppliedPoints(){
         $points = $this->profile->points;

@@ -145,10 +145,6 @@
                         <div class="checkout__order__subtotal">Subtotal <span>{{$total_order_price}} AED</span></div>
                         @endif
                         <div class="checkout__order__total">Tax <span>{{$tax}}%</span></div>
-                        <?php $tax_value = $tax * $total_order_price / 100 ;
-                              $order_grand_total = $total_order_price + $tax_value ;
-                              $order_grand_total = number_format((float)$order_grand_total, 2, '.', '');
-                        ?>
                         <div style="color: wheat" class="checkout__order__total"><b>Total <span>{{$order_grand_total}} AED</span></b></div>
                         <div class="checkout__input__checkbox">
                             <label for="cash">
