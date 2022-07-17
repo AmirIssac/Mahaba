@@ -63,7 +63,7 @@
                                     <label>
                                         Ship to a different address ?
                                     </label>
-                                    <input type="text" placeholder="type address here if it's different from your main profile address" class="form-control" name="address2" id="address2">
+                                    <input type="text" placeholder="type address here if it's different from your main profile address" value="{{ old('address2') }}" class="form-control" name="address2" id="address2">
                                 @else
                                     @if($errors->has('address2'))
                                     <p style="color: red; font-weight:bold;">

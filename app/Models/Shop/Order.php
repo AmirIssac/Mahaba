@@ -3,6 +3,7 @@
 namespace App\Models\Shop;
 
 use App\Models\DiscountDetail;
+use App\Models\GuestReference;
 use App\Models\OrderSystem;
 use App\Models\RejectReason;
 use App\Models\Store;
@@ -75,6 +76,11 @@ class Order extends Model
 
     public function rejectReasons(){
         return $this->belongsToMany(RejectReason::class);
+    }
+
+    public function reference()
+    {
+        return $this->hasOne(GuestReference::class);
     }
 
     /*

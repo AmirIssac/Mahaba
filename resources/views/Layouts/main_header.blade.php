@@ -78,6 +78,7 @@
                                     </li>
                                 @else
                                 <li><a class="dropdown-item" href="{{ route('login') }}"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</a></li>
+                                <li><a class="dropdown-item" href="{{ route('my.orders') }}"><i class="fa-solid fa-arrow-right-to-bracket"></i>My orders</a></li>
                                 @endif
                             </ul>
                         </li>

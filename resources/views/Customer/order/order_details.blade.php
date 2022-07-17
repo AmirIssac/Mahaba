@@ -57,12 +57,25 @@
                     <th>Sub total</th>
                     <th>Tax</th>
                     <th>Total</th>
+                    <th></th>
                 </tr>
                 <tr>
                     <td>{{$order->sub_total}} AED</td>
                     <td>{{$order->tax_ratio}}% ({{$order->tax_value}} AED)</td>
                     <td>{{$order->total}} AED<span class="badge badge-success">success</span>
                     </td>
+                    <td></td>
+                </tr>
+                <tr>
+                <td>
+                    شكرا لشرائك من الدباغ
+                </td>
+                <td>
+                    @isset($reference)
+                    هذا الرمز لتتمكن من متابعة حالة طلبك <span class="badge badge-success">{{ $reference }}</span>
+                    @endisset
+                </td>
+                <td></td><td></td>
                 </tr>
             </table>
         </div>

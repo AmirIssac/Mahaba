@@ -36,13 +36,13 @@
                                     <div class="col-lg-6" style="margin: 8px 0px;">
                                         <div>
                                             Fist Name<span>*</span>
-                                            <input type="text" name="first_name" value="" class="form-control">
+                                            <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-lg-6" style="margin: 8px 0px;">
                                         <div>
                                             Last Name<span>*</span>
-                                            <input type="text" name="last_name" value="" class="form-control">
+                                            <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -53,7 +53,7 @@
                                     </p>
                                     @endif
                                     Address
-                                <input type="text" name="address2" id="address2" class="form-control">
+                                <input type="text" name="address2" value="{{ old('address2') }}" id="address2" class="form-control">
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-6" style="margin: 8px 0px;">
@@ -65,7 +65,7 @@
                                             @else
                                             Phone<span>*</span>
                                             @endif
-                                            <input type="text" name="phone" placeholder="0500000000" class="form-control">
+                                            <input type="text" name="phone" placeholder="0500000000" value="{{ old('phone') }}" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-lg-6" style="margin: 8px 0px;">
@@ -77,14 +77,14 @@
                                             @else
                                             Email<span>*</span>
                                             @endif
-                                            <input type="text" name="email" value="" class="form-control" required>
+                                            <input type="text" name="email" value="{{ old('email') }}" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div style="margin: 8px 0px;">
                                     <p>Order notes</p>
                                     <input type="text" name="customer_note"
-                                        placeholder="Notes about your order, e.g. special notes for delivery." class="form-control">
+                                        placeholder="Notes about your order, e.g. special notes for delivery." value="{{ old('customer_note') }}" class="form-control">
                                 </div>
                             </div>
 

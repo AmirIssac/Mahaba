@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\AttributeValue;
 use App\Models\DiscountDetail;
+use App\Models\GuestReference;
 use App\Models\OrderSystem;
 use App\Models\Setting;
 use App\Models\Shop\CartItem;
@@ -21,6 +22,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+
 
 class OrderController extends Controller
 {
@@ -339,7 +342,11 @@ class OrderController extends Controller
                 $address = $request->address2;
 
             $estimated_time = $guest->calculateGuestDeliverTime(true);
-
+            // create guest reference code
+            do{
+                $reference = Str::random(6);
+                $check_reference = GuestReference::where('reference',$reference)->first();
+            }while($check_reference);
             DB::beginTransaction();
             $store_id = Store::first()->id;  // mahaba
             $order = Order::create([
@@ -359,6 +366,10 @@ class OrderController extends Controller
                 'address' => $address ,
                 'customer_note' => $request->customer_note ,
                 'estimated_time' => $estimated_time ,
+            ]);
+            $order_reference = GuestReference::create([
+                'order_id' => $order->id,
+                'reference' => $reference,
             ]);
             // super admin
             $super_admin = User::role('super_admin')->first();
@@ -391,8 +402,9 @@ class OrderController extends Controller
             Db::commit();
             // delete items from session cart
             Session::forget('cart');
+            return redirect(route('order.details.reference',$reference));
             //return redirect(route('order.details',$order->id));
-            return redirect('/')->with('success','your order created successfully');
+            //return redirect('/')->with('success','your order created successfully');
         }  // end if ($cart)
     }
 
@@ -402,10 +414,26 @@ class OrderController extends Controller
         return view('Customer.order.order_details',['order' => $order , 'order_items' => $order_items]);
     }
 
+    public function detailsByReference($reference){
+        $guest = true;
+        $guestReference = GuestReference::where('reference',$reference)->first();
+        if(!$guestReference)
+            abort(404);
+        $order = $guestReference->order;
+        $order_items = $order->orderItems;
+        return view('Customer.order.order_details',['order' => $order , 'order_items' => $order_items ,
+        'reference' => $guestReference->reference , 'guest' => $guest]);
+    }
+
     public function showMyOrders(){
-        $user = User::findOrFail(Auth::user()->id);
-        $orders = $user->orders()->orderBy('updated_at','DESC')->simplePaginate(10);
-        return view('Customer.order.my_orders',['orders'=>$orders]);
+        if (Auth::user()) {
+            $user = User::findOrFail(Auth::user()->id);
+            $orders = $user->orders()->orderBy('updated_at', 'DESC')->simplePaginate(10);
+            return view('Customer.order.my_orders', ['orders'=>$orders]);
+        }
+        else{
+            return view('Guest.order.my_orders');
+        }
     }
 
     public function viewOrder($id){
@@ -425,6 +453,21 @@ class OrderController extends Controller
             });  // end mapping
             //return $order_items;
             */
+        if($order->orderSystems()->count() > 0){
+            $order_process = $order->orderSystems->last();
+            $last_update_status = $order_process->updated_at->diffForHumans();
+        }
+        else{
+            $last_update_status = $order->updated_at->diffForHumans();
+        }
+        return view('Customer.order.view_order',['order' => $order , 'order_items' => $order_items,'last_update_status'=>$last_update_status]);
+    }
+
+    public function trackByReference(Request $request){
+        $reference = $request->reference;
+        $guest_ref = GuestReference::where('reference',$reference)->first();
+        $order = $guest_ref->order;
+        $order_items = $order->orderItems;
         if($order->orderSystems()->count() > 0){
             $order_process = $order->orderSystems->last();
             $last_update_status = $order_process->updated_at->diffForHumans();

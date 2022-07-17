@@ -94,7 +94,6 @@ Route::group(['middleware'=>['auth']] , function(){
     //Route::get('/checkout/guest',[OrderController::class, 'guestCheckout'])->name('checkout.guest');
     Route::post('/submit/order', [App\Http\Controllers\Customer\OrderController::class, 'submitOrder'])->name('submit.order')->middleware('submit_order');
     //Route::post('/submit/order/as-guest',[App\Http\Controllers\Customer\OrderController::class, 'submitOrderAsGuest'])->name('submit.order.as.guest');
-    Route::get('/my-orders', [App\Http\Controllers\Customer\OrderController::class, 'showMyOrders'])->name('my.orders');
     Route::get('/my-profile', [ProfileController::class, 'myProfile'])->name('my.profile');
     Route::post('/submit/profile', [ProfileController::class, 'submitProfile'])->name('submit.profile');
     Route::post('rate/product/{product_id}', [ProductController::class, 'rateProduct'])->name('rate.product');
@@ -133,4 +132,9 @@ Route::group(['middleware'=>['is_guest']] , function(){
 });
 Route::get('/contact-us', [ContactController::class, 'contactUs'])->name('contact.us');
 Route::post('/store-contact-form', [ContactController::class, 'storeContactForm'])->name('store.contact.form');
+
+
+Route::get('/order-details/reference/{reference}',[App\Http\Controllers\Customer\OrderController::class, 'detailsByReference'])->name('order.details.reference');
+Route::get('/my-orders', [App\Http\Controllers\Customer\OrderController::class, 'showMyOrders'])->name('my.orders');
+Route::get('/track-order-by/reference',[App\Http\Controllers\Customer\OrderController::class, 'trackByReference'])->name('track.order.reference');
 
