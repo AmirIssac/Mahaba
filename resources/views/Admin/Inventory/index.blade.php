@@ -535,7 +535,7 @@
                 @endforeach
                 <tr>
                     <td>
-                    <a class="btn btn-success">New</a>
+                    <button id="new-category-btn" class="btn btn-success">New</button>
                     </td>
                 </tr>
               </tbody>
@@ -544,6 +544,51 @@
         </div>
       </div>
     </div>
+
+    {{-- new Category Form --}}
+    <div class="col-md-12">
+        <form action="{{route('store.category')}}" method="POST" enctype="multipart/form-data">
+          @csrf
+      <div id="new-category-form" class="card displaynone">
+        <div class="card-header">
+          <h4 class="card-title">New Category</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class=" text-primary">
+                <th>
+                  Name EN
+                </th>
+                <th>
+                  Name AR
+                </th>
+                <th>
+                  Image
+                </th>
+              </thead>
+              <tbody>
+                <tr>
+                    <td> <input type="text" name="name_en" class="form-control" required> </td>
+                    <td> <input type="text" name="name_ar" class="form-control" required> </td>
+
+                    <td>{{--<label for="file-input-cat">
+                        click to upload
+                    </label>--}}
+                    <input type="file" name="image" required/></td>
+                </tr>
+                <tr>
+                  <td><button class="btn btn-success">Create</button></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
 
 
     <div class="col-md-12">
@@ -730,6 +775,14 @@
         $(this).addClass('displaynone');
         $('html, body').animate({
           scrollTop: $("#new-attribute-value-form").offset().top
+        }, 1000);
+    });
+
+    $('#new-category-btn').on('click',function(){
+        $('#new-category-form').removeClass('displaynone');
+        $(this).addClass('displaynone');
+        $('html, body').animate({
+          scrollTop: $("#new-category-form").offset().top
         }, 1000);
     });
 

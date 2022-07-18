@@ -13,6 +13,7 @@ use App\Models\Shop\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class InventoryController extends Controller
 {
@@ -37,6 +38,17 @@ class InventoryController extends Controller
         $attribute_values = AttributeValue::get();
         return view('Admin.Inventory.index',['products'=>$products,'categories'=>$categories,'discounts'=>$discounts,
                                              'attributes'=>$attributes,'attribute_values'=>$attribute_values]);
+    }
+
+    public function storeCategory(Request $request){
+        $code = Str::random(8);
+        $imagePath = $request->file('image')->store('Categories/'.$code, 'public');
+        Category::create([
+            'name_en' => $request->name_en ,
+            'name_ar' => $request->name_ar ,
+            'image' => $imagePath ,
+        ]);
+        return back();
     }
 
     public function storeProduct(Request $request){

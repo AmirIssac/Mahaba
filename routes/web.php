@@ -32,6 +32,7 @@ Route::get('/', [Controller::class, 'index'])->name('index');
 // Admin
 Route::group(['middleware'=>['is_admin','auth']] , function(){
         Route::get('/inventory',[AdminInventoryController::class, 'index'])->name('inventory.index');
+        Route::post('/store/category',[AdminInventoryController::class, 'storeCategory'])->name('store.category');
         Route::post('/store/product',[AdminInventoryController::class, 'storeProduct'])->name('store.product');
         Route::get('/edit/product/form/{product_id}',[AdminInventoryController::class, 'editProductForm'])->name('edit.product.form');
         Route::post('/update/product/{product_id}',[AdminInventoryController::class, 'updateProduct'])->name('update.product');
@@ -116,6 +117,7 @@ Route::get('/session', function(){
 // guest
 Route::get('/sign-up', [Controller::class, 'signUpForm'])->name('sign.up');
 });
+Route::get('/categories', [ProductController::class, 'categories'])->name('categories');
 Route::get('/by-category/{category_id}', [ProductController::class, 'indexByCategory'])->name('index.by.category');
 Route::get('/filter', [ProductController::class, 'filter'])->name('filter');
 Route::get('/product/{product_id}', [ProductController::class, 'viewProduct'])->name('view.product');

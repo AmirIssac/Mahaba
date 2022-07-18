@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Session;
 class ProductController extends Controller
 {
 
+    public function categories(){
+        $categories = Category::get();
+        return view('Customer.product.categories',['categories'=>$categories]);
+    }
+
     public function indexByCategory($id){
         $category = Category::findOrFail($id);
         $categories = Category::all();
