@@ -214,7 +214,11 @@
                                     {{--
                                 <input type="hidden" name="points_applied" id="points-input">
                                 --}}
-                                <button class="btn btn-success"><i class="fa-solid fa-money-check"></i> Proceed To Checkout</button>
+                                @if($isAcceptOrders)
+                                    <button class="btn btn-success"><i class="fa-solid fa-money-check"></i> Proceed To Checkout</button>
+                                @else
+                                    <button type="button" class="btn btn-danger">Sorry not accept any order now</button>
+                                @endif
                                 </div>
                             </form>
                             @endif

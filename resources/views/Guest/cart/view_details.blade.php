@@ -387,7 +387,11 @@
                             @else
                             <h4 id="min-order-warning" class="displaynone">You can't submit order by less than {{$min_order}} AED</h4>
                             <div id="proceed-to-checkout-div">
-                            <button id="proceed-to-checkout" class="primary-button"><i class="fa-solid fa-money-check"></i></button>
+                            @if($isAcceptOrders)
+                                    <button id="proceed-to-checkout" class="primary-button"><i class="fa-solid fa-money-check"></i></button>
+                            @else
+                                    <button type="button" class="btn btn-danger">Sorry not accept any order now</button>
+                            @endif
                             </div>
                             @endif
                         @endif

@@ -33,12 +33,15 @@ class SettingController extends Controller
                                     break ;
                 case 'purchase_value_to_add_points' : $purchase_value_to_add_points =  $setting->value;
                                     break ;
+                case 'accept_orders' : $accept_orders =  $setting->value;
+                                    break ;
             }
         }
         return view('Admin.settings.index',['tax'=>$tax,'min_order'=>$min_order,'close_delivery'=>$close_delivery,
                                             'hours_deliver_when_free'=>$hours_deliver,'number_of_orders_increase_time'=>$number_of_orders,
                                             'contact_phone' => $contact_phone , 'contact_email' => $contact_email,'one_percent_discount_by_points'=>$one_percent_discount_by_points,
-                                            'add_points_by' => $add_points_by , 'purchase_value_to_add_points'=>$purchase_value_to_add_points]);
+                                            'add_points_by' => $add_points_by , 'purchase_value_to_add_points'=>$purchase_value_to_add_points,
+                                            'accept_orders' => $accept_orders]);
     }
 
     public function update(Request $request){
@@ -52,6 +55,10 @@ class SettingController extends Controller
         $setting_one_percent_discount_by_points = Setting::where('key','one_percent_discount_by_points')->first();
         $setting_add_points_by = Setting::where('key','add_points_by')->first();
         $setting_purchase_value_to_add_points = Setting::where('key','purchase_value_to_add_points')->first();
+        $accept_orders = Setting::where('key','accept_orders')->first();
+        $acc_input = 1 ;
+        if($request->accept_orders != 1)
+            $acc_input = 0 ;
         $setting_tax->update([
             'value' => $request->tax ,
         ]);
@@ -81,6 +88,9 @@ class SettingController extends Controller
         ]);
         $setting_purchase_value_to_add_points->update([
             'value' => $request->purchase_value_to_add_points ,
+        ]);
+        $accept_orders->update([
+            'value' => $acc_input ,
         ]);
         return back();
     }

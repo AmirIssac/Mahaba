@@ -12,4 +12,12 @@ class Setting extends Model
     protected $fillable = [
         'key','value',
     ];
+
+    public static function isAcceptOrders(){
+        $accept_orders = Setting::where('key','accept_orders')->first();
+        if($accept_orders->value == 1)
+            return true;
+        else
+            return false;
+    }
 }

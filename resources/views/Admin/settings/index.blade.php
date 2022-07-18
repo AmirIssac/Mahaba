@@ -12,13 +12,18 @@
 <div class="content">
   <div class="row">
     <div class="col-md-8">
+    <form action="{{route('update.settings')}}" method="POST">
+        @csrf
       <div class="card">
         <div class="card-header">
-          <h5 class="title">Settings</h5>
+          <h5 class="title">Settings
+          </h5>
+          <div style="display: flex; justify-content: center; align-items: center;" class="col-md-3">
+            <label>Accept orders</label>
+            <input type="checkbox" name="accept_orders" value="1" class="form-control" {{ $accept_orders == 1 ? 'checked' : '' }}>
+          </div>
         </div>
         <div class="card-body">
-            <form action="{{route('update.settings')}}" method="POST">
-                @csrf
             <div class="row">
               <div class="col-md-3 pr-1">
                 <div style="display: flex; flex-direction: column;" class="form-group">
@@ -52,6 +57,7 @@
               </div>
               <div class="col-md-6 pr-1">
               </div>
+
               <div class="col-md-4 pr-1">
                 <div style="display: flex; flex-direction: column;" class="form-group">
                   <label> 1% discount for each points </label>
