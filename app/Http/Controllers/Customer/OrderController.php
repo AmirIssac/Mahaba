@@ -129,11 +129,13 @@ class OrderController extends Controller
         $total_order_price = 0 ;
         $tax_row = Setting::where('key','tax')->first();
         $tax = (float) $tax_row->value;
+        /*
         $number_of_today_orders = Order::whereYear('created_at',now()->year)->whereMonth('created_at',now()->month)
                                     ->whereDay('created_at',now()->day)->count();
         $date = Carbon::now();
         $date = $date->format('ymd');    // third segment
         $number = $date.str_pad($number_of_today_orders + 1, 4, "0", STR_PAD_LEFT);
+        */
         // $order_items_arr is array of arrays
         $order_items_arr = array();
         $total_order_price = 0 ;
@@ -152,6 +154,8 @@ class OrderController extends Controller
         DB::beginTransaction();
        // try{
                 $store_id = Store::first()->id;  // mahaba
+                $order_index = Order::whereYear('created_at',now()->year)->count();
+                $number = str_pad($order_index + 1, 6, "0", STR_PAD_LEFT);
                 $order = Order::create([
                     'user_id' => $user->id ,
                     'store_id' => $store_id,
@@ -189,6 +193,7 @@ class OrderController extends Controller
                     ]);
                 }
                 // create discount
+                /*
                 if(Session::get('points_applied')){
                     DiscountDetail::create([
                         'user_id' => $user->id ,
@@ -199,6 +204,7 @@ class OrderController extends Controller
                         'code' => Session::get('points_applied'),
                     ]);
                 }
+                */
                 // create payment_details
                 if($request->payment_method == 'cash'){
                     PaymentDetail::create([
@@ -244,11 +250,7 @@ class OrderController extends Controller
         $total_order_price = 0 ;
         $tax_row = Setting::where('key','tax')->first();
         $tax = (float) $tax_row->value;
-        $number_of_today_orders = Order::whereYear('created_at',now()->year)->whereMonth('created_at',now()->month)
-        ->whereDay('created_at',now()->day)->count();
-        $date = Carbon::now();
-        $date = $date->format('ymd');    // third segment
-        $number = $date.str_pad($number_of_today_orders + 1, 4, "0", STR_PAD_LEFT);
+
         if($cart){
             foreach($cart as $c_item){
                 $item = Product::find($c_item['product_id']);  // but we have to take quantity too (its not stored in product object its stored in cart_item table and we dont have cart_item in session process)
@@ -356,6 +358,8 @@ class OrderController extends Controller
             }while($check_reference);
             DB::beginTransaction();
             $store_id = Store::first()->id;  // mahaba
+            $order_index = Order::whereYear('created_at',now()->year)->count();
+            $number = str_pad($order_index + 1, 6, "0", STR_PAD_LEFT);
             $order = Order::create([
                 'user_id' => $guest->id ,
                 'store_id' => $store_id ,
