@@ -62,21 +62,23 @@
                     <tr>
                         <td>
                             {{$item->product->name_en}}
-                            @foreach($item->item_attributes as $item_attr) {{-- unserialized array --}}
-                                <p>{{ $item_attr['price'] }}+{{ $item_attr['value'] }}</p>
-                            @endforeach
+
+                            <?php $print_order_item_attributes = $item->printOrderItemAttributes(); ?>
+                                @foreach($print_order_item_attributes as $order_attributes)
+                                    + {{ $order_attributes['value'] }} ({{ $order_attributes['final_price'] }})
+                                @endforeach
                         </td>
                         <td>
-                            @if($item->product->unit == 'gram')
+                            @if($item->product->isGram())
                                 {{$item->quantity / 1000}} K.G
-                            @elseif($item->product->unit == 'piece')
+                            @elseif($item->product->isPiece())
                                 {{$item->quantity}}
                             @endif
                         </td>
                         <td>
-                            @if($item->product->unit == 'gram')
+                            @if($item->product->isGram())
                                 {{$item->quantity * $item->price / 1000}}
-                            @elseif($item->product->unit == 'piece')
+                            @elseif($item->product->isPiece())
                                 {{$item->quantity * $item->price}}
                             @endif
                         </td>

@@ -37,13 +37,13 @@
 						    <div style="color: red; font-weight:bold;">{{ $message }}</div>
 					    @enderror
                       <label class="form-label" for="form3Example3">First Name</label>
-                      <input type="text" id="form3Example3" name="first_name" class="form-control form-control-lg"
+                      <input type="text" id="form3Example3" name="first_name" value="{{ old('first_name') }}" class="form-control form-control-lg"
                       />
                       @error('last_name')
 						    <div style="color: red; font-weight:bold;">{{ $message }}</div>
 					  @enderror
                       <label class="form-label" for="form3Example3">Last Name</label>
-                        <input type="text" id="form3Example3" name="last_name" class="form-control form-control-lg"
+                        <input type="text" id="form3Example3" name="last_name" value="{{ old('last_name') }}" class="form-control form-control-lg"
                          />
                     </div>
 
@@ -52,13 +52,13 @@
 						    <div style="color: red; font-weight:bold;">{{ $message }}</div>
 					    @enderror
                         <label class="form-label" for="form3Example3">Email address</label>
-                        <input type="email" id="form3Example3" name="email" class="form-control form-control-lg"
+                        <input type="email" id="form3Example3" name="email" value="{{ old('email') }}" class="form-control form-control-lg"
                           placeholder="Enter a valid email address" />
                           @error('password')
                           <div style="color: red; font-weight:bold;">{{ $message }}</div>
                           @enderror
                           <label class="form-label" for="form3Example4">Password</label>
-                          <input type="password" id="form3Example4" name="password" class="form-control form-control-lg"
+                          <input type="password" id="form3Example4" name="password" value="{{ old('password') }}" class="form-control form-control-lg"
                             placeholder="Enter password" />
                       </div>
 
@@ -72,7 +72,7 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text" id="basic-addon1">+971</span>
                             </div>
-                            <input type="text" class="form-control" name="phone" placeholder="5xxxxxxxx" aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="text" class="form-control" name="phone" value="{{ old('phone') }}" placeholder="5xxxxxxxx" aria-label="Username" aria-describedby="basic-addon1">
                           </div>
                       </div>
 

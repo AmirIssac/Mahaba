@@ -84,10 +84,6 @@
                                             @else
                                             Phone<span>*</span>
                                             @endif
-                                            <?php
-                                                $phone = substr($user->profile->phone, 5);
-                                                $phone = '0'.$phone;
-                                             ?>
                                             <input type="text" name="phone" value="{{$phone}}" placeholder="0500000000" class="form-control">
 
                                         </div>

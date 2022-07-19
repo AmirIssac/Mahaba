@@ -50,7 +50,8 @@
                             ?>
                             <div class="badge sale-badge position-absolute" style="top: 0.5rem; right: 0.5rem">Sale {{ $discount }}%</div>
                         @else
-                        @endif                        <!-- Product image-->
+                        @endif
+                        <!-- Product image-->
                         <img class="card-img-top" src="{{ asset('storage/'.$product->image)}}" alt="..." />
                         <!-- Product details-->
                         <div class="card-body p-4">

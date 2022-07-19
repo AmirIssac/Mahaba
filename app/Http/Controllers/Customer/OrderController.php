@@ -43,6 +43,8 @@ class OrderController extends Controller
         //$cart_items = $cart->cartItems;
         $cart_items = CartItem::with('attributeValues')->where('cart_id',$cart->id)->get();
         $date = now()->toDateString();
+        $phone = substr($profile->phone, 5);
+        $phone = '0'.$phone;
         $total_order_price = 0 ;
         $tax_row = Setting::where('key','tax')->first();
         $tax = (float) $tax_row->value;
@@ -52,7 +54,8 @@ class OrderController extends Controller
         $order_grand_total = number_format((float)$order_grand_total, 2, '.', '');
         return view('Customer.order.checkout',['cart'=>$cart , 'cart_items' => $cart_items,'date' => $date, 'total_order_price' => $total_order_price,
                                                 'order_grand_total' => $order_grand_total,
-                                               'profile'=>$profile,'tax'=>$tax,'hours_remaining_to_deliver' => $hours_remaining_to_deliver]);
+                                               'profile'=>$profile,'tax'=>$tax,'hours_remaining_to_deliver' => $hours_remaining_to_deliver,
+                                                'phone' => $phone]);
     }
 
     public function guestCheckout(){
