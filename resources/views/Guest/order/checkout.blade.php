@@ -144,7 +144,7 @@
                                 </li>
                                 @endif
                                 {{-- attributes --}}
-                                @foreach($item->attributes as $attr_val) {{-- attr_val is array --}}
+                                @foreach($item->at as $attr_val) {{-- attr_val is array --}}
                                     +
                                     @php
                                         $attr_total = 0 ;

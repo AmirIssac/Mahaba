@@ -180,7 +180,7 @@ class User extends Authenticatable
 
     }
 
-    /*
+
     public function getGuestTotalCart($cart , &$cart_items){
         //$cart_items = collect();
         //return $cart;
@@ -188,12 +188,13 @@ class User extends Authenticatable
         foreach($cart as $c_item){
             $item = Product::find($c_item['product_id']);  // but we have to take quantity too (its not stored in product object its stored in cart_item table and we dont have cart_item in session process)
             $item->quantity = $c_item['quantity'];
-            $item->attributes = $c_item['attributes'];
+            //$item->attributes = $c_item['attributes'];
+            $item->at = $c_item['attributes'];
+            //return $item;
             $cart_items->add($item);
-            return $cart_items;
+            //return $cart_items;
         }
-        return $cart_items;
-
+        //return $cart_items;
         foreach($cart_items as $item){
             if($item->hasDiscount()){
                 if($item->isPercentDiscount()){
@@ -216,18 +217,19 @@ class User extends Authenticatable
                 else
                         $total_order_price = $total_order_price + ($item->price * $item->quantity);
             // add attr_vals costs
-            foreach ($item->attributes as $attr_val) {
-                $attr_val_obj = AttributeValue::find($attr_val['id']);
-                if ($attr_val_obj->isValue()) {
-                    $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id);
-                } elseif ($attr_val_obj->isPercent()) {
-                    $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity;
+            if($item->at)
+                foreach ($item->at as $attr_val) {
+                    $attr_val_obj = AttributeValue::find($attr_val['id']);
+                    if ($attr_val_obj->isValue()) {
+                        $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id);
+                    } elseif ($attr_val_obj->isPercent()) {
+                        $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity;
+                    }
                 }
-            }
         }
         return $total_order_price;
     }
-    */
+
 
     public function maxAppliedPoints(){
         $points = $this->profile->points;

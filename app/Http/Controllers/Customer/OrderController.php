@@ -71,43 +71,8 @@ class OrderController extends Controller
         $tax = (float) $tax_row->value;
         $cart_total = 0 ;
         if($cart){
-            foreach($cart as $c_item){
-                $item = Product::find($c_item['product_id']);  // but we have to take quantity too (its not stored in product object its stored in cart_item table and we dont have cart_item in session process)
-                $item->quantity = $c_item['quantity'];
-                $item->attributes = $c_item['attributes'];
-                $cart_items->add($item);
-            }
-            foreach($cart_items as $item){
-                if($item->hasDiscount()){
-                    if($item->isPercentDiscount()){
-                                $discount = $item->price * $item->discount->value / 100;
-                                if($item->isGram())
-                                    $total_order_price = $total_order_price +  (($item->price - $discount) * $item->quantity / 1000);
-                                else
-                                    $total_order_price = $total_order_price +  ($item->price - $discount) * $item->quantity;
-                                }
-                    else{
-                                if($item->isGram())
-                                    $total_order_price = $total_order_price +  (($item->price - $item->discount->value) * $item->quantity / 1000);
-                                else
-                                    $total_order_price = $total_order_price +  ($item->price - $item->discount->value) * $item->quantity;
-                    }
-                }
-                else  // no discount for this item
-                    if($item->isGram())
-                            $total_order_price = $total_order_price + ($item->price * $item->quantity / 1000);
-                    else
-                            $total_order_price = $total_order_price + ($item->price * $item->quantity);
-                // add attr_vals costs
-                foreach ($item->attributes as $attr_val) {
-                    $attr_val_obj = AttributeValue::find($attr_val['id']);
-                    if ($attr_val_obj->isValue()) {
-                        $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id);
-                    } elseif ($attr_val_obj->isPercent()) {
-                        $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity;
-                    }
-                }
-            }
+            $total_order_price =  $guest->getGuestTotalCart($cart , $cart_items);
+
             $tax_value = $tax * $total_order_price / 100 ;
             $order_grand_total = $total_order_price + $tax_value ;
             $order_grand_total = number_format((float)$order_grand_total, 2, '.', '');
