@@ -91,7 +91,7 @@ Route::group(['middleware'=>['auth']] , function(){
     Route::post('/remove/product/fromFavorite/{product_id}', [ProductController::class, 'removeFromFavorite'])->name('remove.product.from.favorite'); // for deleting from favorite view without ajax
     Route::get('/view/my-cart', [CartController::class, 'viewCart'])->name('view.cart');
     Route::get('/view/my-favorite', [ProfileController::class, 'viewFavorite'])->name('view.favorite');
-    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout')->middleware('submit_order');
     //Route::get('/checkout/guest',[OrderController::class, 'guestCheckout'])->name('checkout.guest');
     Route::post('/submit/order', [App\Http\Controllers\Customer\OrderController::class, 'submitOrder'])->name('submit.order')->middleware('submit_order');
     //Route::post('/submit/order/as-guest',[App\Http\Controllers\Customer\OrderController::class, 'submitOrderAsGuest'])->name('submit.order.as.guest');

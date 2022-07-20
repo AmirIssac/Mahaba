@@ -94,11 +94,12 @@ class UserContoller extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        $phone = '00971'.$request->phone;
         Profile::create([
             'user_id' => $user->id,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'phone' => $request->phone,
+            'phone' => $phone,
             'address_address' => $request->address,
             'address_latitude' => null,
             'address_longitude' => null,

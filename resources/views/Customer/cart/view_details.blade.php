@@ -47,6 +47,7 @@
                         <th>Products</th>
                         <th>1 K.G Price</th>
                         <th>Quantity</th>
+                        <th>+Extras</th>
                         <th>Total</th>
                         <th>
                             @if(Auth::user())
@@ -86,10 +87,30 @@
                                     $new_price = $item->product->price - $item->product->discount->value;
                             ?>
                         <input type="hidden" id="final-item-price{{$counter}}" value="{{$new_price}}">
-                        {{$new_price}}
-                        @else
+                        {{-- calculate attribute based on percent value of product price because we multiply it by quantity --}}
+                        <?php $at_val = 0 ; ?>
+                        @if($item->product->isPiece())
+                            @foreach($item->attributeValues as $attr_val)
+                                    @php
+                                        if($attr_val->isPercent())
+                                            $at_val+=$attr_val->printAttributeValuePrice($item->product->id);
+                                    @endphp
+                            @endforeach
+                        @endif
+                        {{ $new_price + $at_val }}
+                        @else {{-- no discount --}}
                             <input type="hidden" id="final-item-price{{$counter}}" value="{{$item->product->price}}">
-                            {{$item->product->price}}
+                            {{-- calculate attribute based on percent value of product price because we multiply it by quantity --}}
+                            <?php $at_val = 0 ; ?>
+                            @if($item->product->isPiece())
+                                @foreach($item->attributeValues as $attr_val)
+                                        @php
+                                            if($attr_val->isPercent())
+                                                $at_val+=$attr_val->printAttributeValuePrice($item->product->id);
+                                        @endphp
+                                @endforeach
+                            @endif
+                        {{ $item->product->price + $at_val }}
                         @endif
                         </td>
                         <td>
@@ -106,10 +127,24 @@
                                 </div>
                             </div>
                         </td>
+                        {{-- extras --}}
                         <td>
+                            <?php $extras_total = 0 ; ?>
+                            @foreach($item->attributeValues as $attr_val)
+                                @if($attr_val->isValue())
+                                    <?php $extras_total += $attr_val->printAttributeValuePrice($item->product->id); ?>
+                                @endif
+                            @endforeach
+                            +{{ $extras_total }}
+                        </td>
+                        <td>
+                            @php
+                            $attr_total = 0 ;
+                            @endphp
                             @if($item->product->isGram())
                                 <input type="hidden" id="single-item-unit{{$counter}}" value="gram">
                                 <input type="hidden" id="single-item-total{{$counter}}" value="{{$item->product->hasDiscount() ? ($new_price * $item->quantity) / 1000 : ($item->product->price * $item->quantity) / 1000}}">
+                                {{--
                                 <p id="h-item-total{{$counter}}">{{$item->product->hasDiscount() ? ($new_price * $item->quantity) / 1000 : ($item->product->price * $item->quantity) / 1000}}</p>
                                 +
                                 <p id="attr-item-total{{$counter}}">
@@ -123,9 +158,19 @@
                                     @endforeach
                                     {{  $attr_total  }}
                                 </p>
+                                --}}
+
+                                @foreach($item->attributeValues as $attr_val)
+                                        @php
+                                            $attr_total+=$attr_val->price;
+                                        @endphp
+                                @endforeach
+                                <p id="h-item-total{{$counter}}">{{$item->product->hasDiscount() ? (($new_price * $item->quantity) / 1000 ) + $attr_total : (($item->product->price * $item->quantity) / 1000 ) + $attr_total}}</p>
+                                </p>
                             @else {{-- piece --}}
                                 <input type="hidden" id="single-item-unit{{$counter}}" value="piece">
                                 <input type="hidden" id="single-item-total{{$counter}}" value="{{$item->product->hasDiscount() ? ($new_price * $item->quantity)  : ($item->product->price * $item->quantity)}}">
+                                {{--
                                 <p id="h-item-total{{$counter}}">{{$item->product->hasDiscount() ? ($new_price * $item->quantity) : ($item->product->price * $item->quantity)}}</p>
                                 +
                                 <p id="attr-item-total{{$counter}}">
@@ -141,6 +186,16 @@
                                         @endphp
                                     @endforeach
                                     {{  $attr_total  }}
+                                --}}
+                                @foreach($item->attributeValues as $attr_val)
+                                        @php
+                                            if($attr_val->isValue())
+                                                $attr_total+=$attr_val->printAttributeValuePrice($item->product->id);
+                                            elseif($attr_val->isPercent())
+                                                $attr_total+=$attr_val->printAttributeValuePrice($item->product->id) * $item->quantity;
+                                        @endphp
+                                @endforeach
+                                <p id="h-item-total{{$counter}}">{{$item->product->hasDiscount() ? ($new_price * $item->quantity + $attr_total) : ($item->product->price * $item->quantity + $attr_total)}}</p>
                                 </p>
                             @endif
                         </td>
@@ -174,7 +229,7 @@
                         </td>
                         <td>
                         </td>
-                        <td></td>
+                        <td></td><td></td>
                     </tr>
                     @endif
                     <input type="hidden" value="{{$counter}}" id="cart-rows"> {{-- number of rows in cart --}}

@@ -28,7 +28,7 @@ class EmployeeSeeder extends Seeder
             'user_id' => $employee->id,
             'first_name' => 'Rami',
             'last_name' => 'Ahmad',
-            'phone' => '+971000000003',
+            'phone' => '00971000000003',
             'address_address' => null,
             'address_latitude' => null,
             'address_longitude' => null,

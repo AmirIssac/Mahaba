@@ -41,7 +41,7 @@
               <div class="col-md-3 pr-1">
                 <div style="display: flex; flex-direction: column;" class="form-group">
                     <label>phone</label>
-                    <input type="text" name="phone" placeholder="+9715xxxxxxxx" class="form-control">
+                    <input type="text" name="phone" placeholder="5xxxxxxxx" class="form-control">
                 </div>
               </div>
               <div class="col-md-3 pr-1">

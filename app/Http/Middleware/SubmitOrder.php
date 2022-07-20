@@ -19,7 +19,7 @@ class SubmitOrder
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()) {
+        if(Auth::user()) {
             $user = User::find(Auth::user()->id);
             $cart = $user->cart;
             $cart_items = $cart->cartItems;
@@ -33,7 +33,7 @@ class SubmitOrder
             $total_order_price = 0 ;
             $tax_value = 0 ;
             $grand_order_total = $cart->getTotalSubmittingOrder($total_order_price, $order_items_arr, $tax_value);
-            if ($grand_order_total < $min_order_limit && !Setting::isAcceptOrders()) {
+            if ($grand_order_total < $min_order_limit || !Setting::isAcceptOrders()) {
                 return redirect(route('view.cart'));
             }
             return $next($request);

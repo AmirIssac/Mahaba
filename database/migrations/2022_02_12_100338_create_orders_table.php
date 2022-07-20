@@ -27,12 +27,12 @@ class CreateOrdersTable extends Migration
             $table->decimal('tax_ratio',3,2);   // the tax ratio
             $table->decimal('tax_value',10,2);   // the total tax value of the order
             $table->decimal('shipping',10,2);   // the shipping charges of the order items
-            $table->decimal('total',10,2);   // the total price of the order items including tax & shipping 
+            $table->decimal('total',10,2);   // the total price of the order items including tax & shipping
             $table->string('first_name');
             $table->string('last_name');
             $table->string('phone',20);
             $table->string('email',75);
-            $table->string('address');
+            $table->string('address');  // city , state
             $table->string('customer_note')->nullable();
             //$table->string('employee_note')->nullable();
             $table->timestamp('estimated_time')->nullable();  // determined from the dashboard after accepting the order

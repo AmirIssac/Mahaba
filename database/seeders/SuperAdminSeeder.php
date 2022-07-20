@@ -18,7 +18,7 @@ class SuperAdminSeeder extends Seeder
      * @return void
      */
     public function run()
-    {   
+    {
         //Role::create(['name' => 'super_admin','name' => 'admin' , 'name' => 'employee' ,'name' => 'customer']);
         $superAdmin = User::create([
             'name' => 'Dabbagh',
@@ -29,7 +29,7 @@ class SuperAdminSeeder extends Seeder
             'user_id' => $superAdmin->id,
             'first_name' => 'Dabbagh',
             'last_name' => 'Dabbagh',
-            'phone' => '+971000000000',
+            'phone' => '00971000000000',
             'address_address' => null,
             'address_latitude' => null,
             'address_longitude' => null,
