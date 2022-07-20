@@ -31,6 +31,8 @@ class SuperAdminSeeder extends Seeder
             'last_name' => 'Dabbagh',
             'phone' => '00971000000000',
             'address_address' => null,
+            'address_street' => null,
+            'address_building_apartment' => null,
             'address_latitude' => null,
             'address_longitude' => null,
         ]);

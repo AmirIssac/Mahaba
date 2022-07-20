@@ -100,7 +100,7 @@
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                 <div class="text-center"><a class="btn view-btn" href="#"><i class="fa-solid fa-cart-arrow-down"></i></a>
-                                    <a class="btn view-btn" href="{{ route('view.product',$product->id) }}"><i class="fa-solid fa-eye"></i></a>
+                                    <a class="btn view-btn" href="{{ route('view.product',Crypt::encrypt($product->id)) }}"><i class="fa-solid fa-eye"></i></a>
                                 </div>
                             </div>
                         </div>

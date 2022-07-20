@@ -15,6 +15,8 @@ class Profile extends Model
         'last_name',
         'phone',
         'address_address',
+        'address_street',
+        'address_building_apartment',
         'address_latitude',
         'address_longitude',
         'points',

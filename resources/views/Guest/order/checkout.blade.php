@@ -52,8 +52,30 @@
                                         {{ $errors->first('address2') }}
                                     </p>
                                     @endif
-                                    Address
-                                <input type="text" name="address2" value="{{ old('address2') }}" id="address2" class="form-control">
+                                    @if($errors->has('address_street2'))
+                                    <p style="color: red; font-weight:bold;">
+                                        {{ $errors->first('address_street2') }}
+                                    </p>
+                                    @endif
+                                    @if($errors->has('address_building_apartment2'))
+                                    <p style="color: red; font-weight:bold;">
+                                        {{ $errors->first('address_building_apartment2') }}
+                                    </p>
+                                    @endif
+                                    <div style="display: flex; flex-direction: column">
+                                        <div style="display: flex; flex-direction: column">
+                                            City
+                                            <input type="text" class="checkout__input__add" value="{{ old('address2') }}" name="address2" id="address2">
+                                        </div>
+                                        <div style="display: flex; flex-direction: column">
+                                            Street
+                                            <input type="text" class="checkout__input__add" value="{{ old('address_street2') }}" name="address_street2" id="address_street2">
+                                        </div>
+                                        <div style="display: flex; flex-direction: column">
+                                            Building and apartment
+                                            <input type="text" class="checkout__input__add" value="{{ old('address_building_apartment2') }}" name="address_building_apartment2" id="address_building_apartment2">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-6" style="margin: 8px 0px;">

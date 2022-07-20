@@ -101,10 +101,10 @@ Route::group(['middleware'=>['auth']] , function(){
 });
 
 
-Route::group(['middleware'=>['customer_order_check']] , function(){
+//Route::group(['middleware'=>['customer_order_check']] , function(){
     Route::get('/order/details/{order_id}',[App\Http\Controllers\Customer\OrderController::class, 'details'])->name('order.details');
     Route::get('/view/order/{order_id}',[App\Http\Controllers\Customer\OrderController::class, 'viewOrder'])->name('view.order');
-});
+
 
 
 

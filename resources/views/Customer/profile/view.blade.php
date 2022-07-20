@@ -66,12 +66,21 @@
                                     <label>Phone</label>
                                     <input type="text" name="phone" value="{{$profile->phone}}">
                                 </div>
-                                <div style="margin: 10px 0 0 0;" class="col-lg-4 col-md-4">
-                                    <label>Address</label>
-                                    <input type="text" name="address_address" value="{{ $profile->address_address }}" placeholder="enter your full address" id="address">
+                                    <div style="margin: 10px 0 0 0;" class="col-lg-4 col-md-4 col-sm-2">
+                                        <label>City</label>
+                                        <input type="text" name="address_address" value="{{ $profile->address_address }}" placeholder="enter your City" id="address">
+                                    </div>
+                                    <div style="margin: 10px 0 0 0;" class="col-lg-4 col-md-4 col-sm-2">
+                                    <label>Street Name</label>
+                                    <input type="text" name="address_street" value="{{ $profile->address_street }}" placeholder="enter street name">
+                                    </div>
+                                    <div style="margin: 10px 0 0 0;" class="col-lg-4 col-md-4 col-sm-2">
+                                    <label>Building and apartment</label>
+                                    <input type="text" name="address_building_apartment" value="{{ $profile->address_building_apartment }}" placeholder="enter building name with apartment number">
                                     <input type="hidden" name="address_latitude" id="latitude">
                                     <input type="hidden" name="address_longitude" id="longitude">
-                                </div>
+                                    </div>
+                                    </div>
                                 <div class="col-lg-8 col-md-8">
                                 </div>
                                 <div  style="margin: 10px 0 0 0;" class="col-lg-4 col-md-4">

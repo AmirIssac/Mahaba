@@ -70,7 +70,7 @@
                     @endif
                   </td>
                   <td style="font-weight: bold; color: #38b818;" class="text-center">{{$order->total}}</td>
-                  <td class="text-center">{{$order->address}}</td>
+                  <td class="text-center">{{$order->address}} , {{ $order->address_street }} , {{ $order->address_building_apartment }}</td>
                   <td class="text-center">{{$order->paymentDetail->provider}}</td>
                   @if($order->paymentDetail->status == 'pending')
                     <td style="color: #ff7300" class="text-center">{{$order->paymentDetail->status}}</td>

@@ -66,7 +66,7 @@
                     @endif
                   </td>
                   <td style="color:#38b818; font-weight:bold;" class="text-center">{{$order->total}}</td>
-                  <td class="text-center">{{$order->address}}</td>
+                  <td class="text-center">{{$order->address}} , {{ $order->address_street }} , {{ $order->address_building_apartment }}</td>
                   <td class="text-center">{{$order->paymentDetail->provider}}</td>
                   <td class="text-center">{{$order->paymentDetail->status}}</td>
                 </tr>

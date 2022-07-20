@@ -58,20 +58,90 @@
                                         {{ $errors->first('address2') }}
                                     </p>
                                     @endif
-                                    Address
-                                    <input type="text" class="checkout__input__add taken" value="{{$profile->address_address}}" name="address1" id="address1" readonly>
+                                    @if($errors->has('address_street1'))
+                                            <p style="color: red; font-weight:bold;">
+                                                {{ $errors->first('address_street1') }}
+                                            </p>
+                                    @endif
+                                    @if($errors->has('address_street2'))
+                                    <p style="color: red; font-weight:bold;">
+                                        {{ $errors->first('address_street2') }}
+                                    </p>
+                                    @endif
+                                    @if($errors->has('address_building_apartment1'))
+                                            <p style="color: red; font-weight:bold;">
+                                                {{ $errors->first('address_building_apartment1') }}
+                                            </p>
+                                    @endif
+                                    @if($errors->has('address_building_apartment2'))
+                                    <p style="color: red; font-weight:bold;">
+                                        {{ $errors->first('address_building_apartment2') }}
+                                    </p>
+                                    @endif
+                                    <div style="display: flex; flex-direction: column">
+                                        <div style="display: flex; flex-direction: column">
+                                            City
+                                            <input type="text" class="checkout__input__add taken" value="{{$profile->address_address}}" name="address1" id="address1" readonly>
+                                        </div>
+                                        <div style="display: flex; flex-direction: column">
+                                            Street
+                                            <input type="text" class="checkout__input__add taken" value="{{$profile->address_street}}" name="address_street1" id="address_street1" readonly>
+                                        </div>
+                                        <div style="display: flex; flex-direction: column">
+                                            Building and apartment
+                                            <input type="text" class="checkout__input__add taken" value="{{$profile->address_building_apartment}}" name="address_building_apartment1" id="address_building_apartment1" readonly>
+                                        </div>
+                                    </div>
                                     <label>
                                         Ship to a different address ?
                                     </label>
+                                    {{--
                                     <input type="text" placeholder="type address here if it's different from your main profile address" value="{{ old('address2') }}" class="form-control" name="address2" id="address2">
-                                @else
+                                    --}}
+                                    <div style="display: flex; flex-direction: column">
+                                        <div style="display: flex; flex-direction: column">
+                                            City
+                                            <input type="text" class="checkout__input__add" value="{{ old('address2') }}" name="address2" id="address2">
+                                        </div>
+                                        <div style="display: flex; flex-direction: column">
+                                            Street
+                                            <input type="text" class="checkout__input__add" value="{{ old('address_street2') }}" name="address_street2" id="address_street2">
+                                        </div>
+                                        <div style="display: flex; flex-direction: column">
+                                            Building and apartment
+                                            <input type="text" class="checkout__input__add" value="{{ old('address_building_apartment2') }}" name="address_building_apartment2" id="address_building_apartment2">
+                                        </div>
+                                    </div>
+                                @else {{-- No profile address --}}
                                     @if($errors->has('address2'))
                                     <p style="color: red; font-weight:bold;">
                                         {{ $errors->first('address2') }}
                                     </p>
                                     @endif
-                                    Address
-                                <input type="text" name="address2" id="address2" class="form-control">
+                                    @if($errors->has('address_street2'))
+                                    <p style="color: red; font-weight:bold;">
+                                        {{ $errors->first('address_street2') }}
+                                    </p>
+                                    @endif
+                                    @if($errors->has('address_building_apartment2'))
+                                    <p style="color: red; font-weight:bold;">
+                                        {{ $errors->first('address_building_apartment2') }}
+                                    </p>
+                                    @endif
+                                    <div style="display: flex; flex-direction: column">
+                                        <div style="display: flex; flex-direction: column">
+                                            City
+                                            <input type="text" class="checkout__input__add" value="{{ old('address2') }}" name="address2" id="address2">
+                                        </div>
+                                        <div style="display: flex; flex-direction: column">
+                                            Street
+                                            <input type="text" class="checkout__input__add" value="{{ old('address_street2') }}" name="address_street2" id="address_street2">
+                                        </div>
+                                        <div style="display: flex; flex-direction: column">
+                                            Building and apartment
+                                            <input type="text" class="checkout__input__add" value="{{ old('address_building_apartment2') }}" name="address_building_apartment2" id="address_building_apartment2">
+                                        </div>
+                                    </div>
                                 @endif
                                 </div>
                                 <div class="row">
@@ -203,6 +273,24 @@
         }
         else{
             $('#address1').removeClass('untaken').addClass('taken');
+        }
+    });
+
+    $('#address_street2').on('keyup paste',function(){
+        if( $(this).val() != '' ){
+            $('#address_street1').removeClass('taken').addClass('untaken');
+        }
+        else{
+            $('#address_street1').removeClass('untaken').addClass('taken');
+        }
+    });
+
+    $('#address_building_apartment2').on('keyup paste',function(){
+        if( $(this).val() != '' ){
+            $('#address_building_apartment1').removeClass('taken').addClass('untaken');
+        }
+        else{
+            $('#address_building_apartment1').removeClass('untaken').addClass('taken');
         }
     })
     </script>

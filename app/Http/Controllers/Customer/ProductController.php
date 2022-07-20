@@ -12,6 +12,7 @@ use App\Models\Shop\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
@@ -88,7 +89,7 @@ class ProductController extends Controller
     }
 
     public function viewProduct($id){
-        $product = Product::with('attributeValues.attribute')->findOrFail($id);
+        $product = Product::with('attributeValues.attribute')->findOrFail(Crypt::decrypt($id));
         //$attributes_list = Attribute::get();
         // I want just attribute collections that contain at least one attribute value attached to this product
         $attributes_list = Attribute::has('attributeValues')->whereHas('attributeValues.products', function($q) use ($product){

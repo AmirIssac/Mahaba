@@ -30,6 +30,8 @@ class EmployeeSeeder extends Seeder
             'last_name' => 'Ahmad',
             'phone' => '00971000000003',
             'address_address' => null,
+            'address_street' => null,
+            'address_building_apartment' => null,
             'address_latitude' => null,
             'address_longitude' => null,
         ]);

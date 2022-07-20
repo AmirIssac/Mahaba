@@ -20,6 +20,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -124,6 +125,10 @@ class OrderController extends Controller
             'email' => ['required','email'],
             'address1' => ['required_without:address2'],
             'address2' => ['required_without:address1'],
+            'address_street1' => ['required_without:address_street2'],
+            'address_street2' => ['required_without:address_street1'],
+            'address_building_apartment1' => ['required_without:address_building_apartment2'],
+            'address_building_apartment2' => ['required_without:address_building_apartment1'],
         ]);
 
         $user = User::findOrFail(Auth::user()->id);
@@ -148,9 +153,16 @@ class OrderController extends Controller
             $order_status = 'pending';
         else
             $order_status = 'pending'; // we will keep it pending I think
-        $address = $request->address1;   // default main address
+
+        $address = $request->address1;   // default main city
+        $address_street = $request->address_street1;   // default main street
+        $address_building_apartment = $request->address_building_apartment1;   // default main building
         if($request->address2)
             $address = $request->address2;
+        if($request->address_street2)
+            $address_street = $request->address_street2;
+        if($request->address_building_apartment2)
+            $address_building_apartment = $request->address_building_apartment2;
 
         $estimated_time = $cart->calculateDeliverTime(true);
 
@@ -174,6 +186,8 @@ class OrderController extends Controller
                     'phone' => $request->phone ,
                     'email' => $request->email ,
                     'address' => $address ,
+                    'address_street' => $address_street ,
+                    'address_building_apartment' => $address_building_apartment ,
                     'customer_note' => $request->customer_note ,
                     'estimated_time' => $estimated_time ,
                 ]);
@@ -232,7 +246,7 @@ class OrderController extends Controller
        //     return 'opss something gone wrong !';
       //  }
 
-        return redirect(route('order.details',$order->id));
+        return redirect(route('order.details',Crypt::encrypt($order->id)));
 
     }
 
@@ -243,6 +257,8 @@ class OrderController extends Controller
             'phone' => ['required','digits:10','regex:/(05)[0-9]{8}/'],
             'email' => ['required','email'],
             'address2' => ['required'],
+            'address_street2' => ['required'],
+            'address_building_apartment2' => ['required'],
         ]);
 
         $guest = User::whereHas('roles', function($q){
@@ -349,9 +365,14 @@ class OrderController extends Controller
                 $order_status = 'pending';
             else
                 $order_status = 'preparing';
+            /*
             $address = $request->address1;   // default main address
             if($request->address2)
                 $address = $request->address2;
+            */
+            $address = $request->address2;
+            $address_street = $request->address_street2;
+            $address_building_apartment = $request->address_building_apartment2;
 
             $estimated_time = $guest->calculateGuestDeliverTime(true);
             // create guest reference code
@@ -378,6 +399,8 @@ class OrderController extends Controller
                 'phone' => $request->phone ,
                 'email' => $request->email ,
                 'address' => $address ,
+                'address_street' => $address_street ,
+                'address_building_apartment' => $address_building_apartment ,
                 'customer_note' => $request->customer_note ,
                 'estimated_time' => $estimated_time ,
             ]);
@@ -423,7 +446,7 @@ class OrderController extends Controller
     }
 
     public function details($id){
-        $order = Order::findOrFail($id);
+        $order = Order::findOrFail(Crypt::decrypt($id));
         $order_items = $order->orderItems;
         return view('Customer.order.order_details',['order' => $order , 'order_items' => $order_items]);
     }
@@ -451,7 +474,7 @@ class OrderController extends Controller
     }
 
     public function viewOrder($id){
-        $order = Order::findOrFail($id);
+        $order = Order::findOrFail(Crypt::decrypt($id));
         $order_items = $order->orderItems;
         /*
         $order_items = $order_items->map(function($order_item, $key) {  // map for get unserialize

@@ -99,6 +99,8 @@ class RegisterController extends Controller
             'last_name' => $data['last_name'],
             'phone' => $phone,
             'address_address' => null,
+            'address_street' => null,
+            'address_building_apartment' => null,
             'address_latitude' => null,
             'address_longitude' => null,
         ]);

@@ -44,7 +44,7 @@
                            @endif
                         </td>
                         <td>
-                            <a href="{{route('view.order',$order->id)}}"><i class="fa fa-eye"></i></a>
+                            <a href="{{route('view.order',Crypt::encrypt($order->id))}}"><i class="fa fa-eye"></i></a>
                         </td>
                     </tr>
                     @endforeach

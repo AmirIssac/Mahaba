@@ -31,6 +31,8 @@ class Order extends Model
         'phone',
         'email',
         'address',
+        'address_street',
+        'address_building_apartment',
         'customer_note',
         'employee_note',
         'estimated_time',
