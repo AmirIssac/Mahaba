@@ -125,7 +125,7 @@ Route::post('/add/product/toCart/{product_id}', [ProductController::class, 'addP
 Route::post('/delete/cart/item/{cart_item}', [CartController::class, 'deleteCartItem'])->name('delete.cart.item');
 Route::post('/delete/cart/content/{cart_id?}', [CartController::class, 'deleteCartContent'])->name('delete.cart.content');
 Route::post('/delete/guest/cart/item/{index}', [CartController::class, 'deleteGuestCartItem'])->name('delete.guest.cart.item');
-Route::get('/checkout/guest',[OrderController::class, 'guestCheckout'])->name('checkout.guest');
+Route::get('/checkout/guest',[OrderController::class, 'guestCheckout'])->name('checkout.guest')->middleware('submit_order');
 Route::post('/submit/order/as-guest',[App\Http\Controllers\Customer\OrderController::class, 'submitOrderAsGuest'])->name('submit.order.as.guest')->middleware('submit_order');
 //Route::post('/update/product/inCart/{product_id}', [ProductController::class, 'updateProductCart'])->name('update.product.in.cart');
 // guest middleware for specific routes

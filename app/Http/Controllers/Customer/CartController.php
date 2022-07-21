@@ -39,48 +39,6 @@ class CartController extends Controller
                                                     ]);
     }
 
-    /*
-    public function viewGuestCart(){
-        $cart = Session::get('cart');
-        $cart_items = collect();
-        $tax_row = Setting::where('key','tax')->first();
-        $min_order_row = Setting::where('key','min_order_limit')->first();
-        $tax = (float) $tax_row->value;
-        $min_order = (float) $min_order_row->value;
-        $cart_total = 0 ;
-        if($cart){
-        foreach($cart as $c_item){
-            $item = Product::find($c_item['product_id']);  // but we have to take quantity too (its not stored in product object its stored in cart_item table and we dont have cart_item in session process)
-            $item->quantity = $c_item['quantity'];
-            $cart_items->add($item);
-        }
-        foreach($cart_items as $item){
-            if($item->hasDiscount()){
-                if($item->isPercentDiscount()){
-                            $discount = $item->price * $item->discount->value / 100;
-                            if($item->unit == 'gram')
-                                $cart_total = $cart_total +  (($item->price - $discount) * $item->quantity / 1000);
-                            else
-                                $cart_total = $cart_total +  ($item->price - $discount) * $item->quantity;
-                            }
-                else{
-                            if($item->unit == 'gram')
-                                $cart_total = $cart_total +  (($item->price - $item->discount->value) * $item->quantity / 1000);
-                            else
-                                $cart_total = $cart_total +  ($item->price - $item->discount->value) * $item->quantity;
-                }
-            }
-            else  // no discount for this item
-                if($item->unit == 'gram')
-                        $cart_total = $cart_total + ($item->price * $item->quantity / 1000);
-                else
-                        $cart_total = $cart_total + ($item->price * $item->quantity);
-        }
-        }
-        return view('Guest.cart.view_details',['cart'=>$cart,'cart_items'=>$cart_items,'cart_total' => $cart_total,'tax'=>$tax,
-                                                    'min_order'=>$min_order]);
-    }
-    */
 
     public function viewGuestCart(){
         $guest = User::whereHas('roles', function($q){
@@ -93,13 +51,12 @@ class CartController extends Controller
         $tax = (float) $tax_row->value;
         $min_order = (float) $min_order_row->value;
         $is_accept_orders = Setting::isAcceptOrders();
-        $cart_total = 0 ;
+        $cart_total = 0 ; // sub total
         $cart_items = collect();
         if($cart)
-            $cart_total =  $guest->getGuestTotalCart($cart , $cart_items);
-        $tax_value = $tax * $cart_total / 100 ;
-        $cart_grand_total = $cart_total + $tax_value ;
-        $cart_grand_total = number_format((float)$cart_grand_total, 2, '.', '');
+            $cart_grand_total =  $guest->getGuestTotalCart($cart , $cart_items , $tax , $cart_total);
+        else
+            $cart_grand_total = 0 ;
         return view('Guest.cart.view_details',['cart'=>$cart,'cart_items'=>$cart_items,'cart_total' => $cart_total,'tax'=>$tax,
                                                   'cart_grand_total' => $cart_grand_total ,  'min_order'=>$min_order,
                                                   'isAcceptOrders' => $is_accept_orders]);

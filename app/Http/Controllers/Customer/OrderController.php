@@ -69,15 +69,11 @@ class OrderController extends Controller
         $total_order_price = 0 ;
         $tax_row = Setting::where('key','tax')->first();
         $tax = (float) $tax_row->value;
-        $cart_total = 0 ;
+        $cart_total = 0 ;  // sub total
         if($cart){
-            $total_order_price =  $guest->getGuestTotalCart($cart , $cart_items);
-
-            $tax_value = $tax * $total_order_price / 100 ;
-            $order_grand_total = $total_order_price + $tax_value ;
-            $order_grand_total = number_format((float)$order_grand_total, 2, '.', '');
+            $order_grand_total =  $guest->getGuestTotalCart($cart , $cart_items , $tax , $cart_total);
             $hours_remaining_to_deliver = $guest->calculateGuestDeliverTime();
-            return view('Guest.order.checkout',['cart'=>$cart , 'cart_items' => $cart_items,'date' => $date, 'total_order_price' => $total_order_price,'tax'=>$tax,'guest'=>$guest,
+            return view('Guest.order.checkout',['cart'=>$cart , 'cart_items' => $cart_items,'date' => $date, 'total_order_price' => $cart_total,'tax'=>$tax,'guest'=>$guest,
                                                 'order_grand_total' => $order_grand_total,'hours_remaining_to_deliver' => $hours_remaining_to_deliver]);
         }
     }
@@ -232,100 +228,13 @@ class OrderController extends Controller
         $cart = Session::get('cart');
         $cart_items = collect();
         $total_order_price = 0 ;
+        $order_items_arr = array();
         $tax_row = Setting::where('key','tax')->first();
         $tax = (float) $tax_row->value;
-
+        $tax_value = 0 ;
         if($cart){
-            foreach($cart as $c_item){
-                $item = Product::find($c_item['product_id']);  // but we have to take quantity too (its not stored in product object its stored in cart_item table and we dont have cart_item in session process)
-                $item->quantity = $c_item['quantity'];
-                $item->attributes = $c_item['attributes'];
-                $cart_items->add($item);
-            }
-            //$order_items_arr = array(array());
-            // $order_items_arr is array of arrays
-            foreach($cart_items as $item){
-                if($item->hasDiscount()){
-                    if($item->isPercentDiscount()){
-                        $discount = $item->price * $item->discount->value / 100;
-                        $new_price = $item->price - $discount;
-                        if($item->isGram())
-                                $total_order_price += $new_price * $item->quantity / 1000 ;
-                        else
-                                $total_order_price += $new_price * $item->quantity;
-                        // order item
+            $grand_order_total = $guest->getGuestTotalOrderOnSubmit($cart , $cart_items , $tax , $tax_value , $total_order_price , $order_items_arr);
 
-                        // attribute add to order_item
-                        // $attribute_values is array of arrays
-                        if(count($item->attributes)>0)
-                            foreach($item->attributes as $attr_val){
-                                $attribute_values[] = array('id' => $attr_val['id'] , 'attribute_id' => $attr_val['attribute_id'],
-                                                            'value' => $attr_val['value'] , 'value_en' => $attr_val['value_en'] , 'value_type' =>  $attr_val['value_type'] ,
-                                                            'price' => $attr_val['price']);
-                            }
-                        else // no attribute values
-                            $attribute_values = array(); // empty
-                        $attribute_values = serialize($attribute_values);
-                        $order_items_arr[] = ['product_id' => $item->id , 'price' => $new_price , 'discount' => $discount , 'quantity' => $item->quantity, 'attr_vals' => $attribute_values];
-                        }
-                    else {
-                        $new_price = $item->price - $item->discount->value;
-                        if($item->isGram())
-                                $total_order_price += $new_price * $item->quantity / 1000 ;
-                        else
-                                $total_order_price += $new_price * $item->quantity;
-
-                        // order item
-
-                        // attribute add to order_item
-                        // $attribute_values is array of arrays
-                        if(count($item->attributes)>0)
-                            foreach($item->attributes as $attr_val){
-                                $attribute_values[] = array('id' => $attr_val['id'] , 'attribute_id' => $attr_val['attribute_id'],
-                                                            'value' => $attr_val['value'] , 'value_en' => $attr_val['value_en'] , 'value_type' =>  $attr_val['value_type'] ,
-                                                            'price' => $attr_val['price']);
-                            }
-                        else // no attribute values
-                            $attribute_values = array(); // empty
-                        $attribute_values = serialize($attribute_values);
-                        $order_items_arr[] = ['product_id' => $item->id , 'price' => $new_price , 'discount' => $item->discount->value  , 'quantity' => $item->quantity, 'attr_vals' => $attribute_values];
-                    }
-                }
-                else{   // no discount
-                        if($item->isGram())
-                            $total_order_price += $item->price * $item->quantity / 1000  ;
-                        else
-                            $total_order_price += $item->price * $item->quantity;
-                        // order item
-
-                        // attribute add to order_item
-                        // $attribute_values is array of arrays
-                        if(count($item->attributes)>0)
-                            foreach($item->attributes as $attr_val){
-                                $attribute_values[] = array('id' => $attr_val['id'] , 'attribute_id' => $attr_val['attribute_id'],
-                                                            'value' => $attr_val['value'] , 'value_en' => $attr_val['value_en'] , 'value_type' =>  $attr_val['value_type'] ,
-                                                            'price' => $attr_val['price']);
-                            }
-                        else // no attribute values
-                            $attribute_values = array(); // empty
-                        $attribute_values = serialize($attribute_values);
-
-                        $order_items_arr[] = ['product_id' => $item->id , 'price' => $item->price , 'discount' => 0  , 'quantity' => $item->quantity , 'attr_vals' => $attribute_values];
-                }
-                // add attr_vals costs
-                foreach ($item->attributes as $attr_val) {
-                    $attr_val_obj = AttributeValue::find($attr_val['id']);
-                    if ($attr_val_obj->isValue()) {
-                        $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id);
-                    } elseif ($attr_val_obj->isPercent()) {
-                        $total_order_price+=$attr_val_obj->printAttributeValuePrice($item->id) * $item->quantity;
-                    }
-                }
-                unset($attribute_values); // delete previuos attrs
-            }
-
-            $tax_value = $tax * $total_order_price / 100 ;
-            $grand_order_total = $total_order_price + $tax_value ;
             if($request->payment_method == 'cash')
                 $order_status = 'pending';
             else
