@@ -133,7 +133,7 @@ class InventoryController extends Controller
             'name_ar' => $request->name_ar,
             'description' => $request->description,
             'price' => $request->price,
-            'unit' => $request->unit,
+            //'unit' => $request->unit,
             'min_weight' => $request->min_weight,
             'increase_by' => $request->increase_by,
             'availability' => $availability,
@@ -251,6 +251,24 @@ class InventoryController extends Controller
             'value_type' => $request->type,
         ]);
 
+        return back();
+    }
+
+    public function editAttributeValue($id){
+        $attributes = Attribute::get();
+        $attr_val = AttributeValue::find($id);
+        return view('Admin.Inventory.edit_attr_val',['attributes' => $attributes , 'attr_val' => $attr_val]);
+    }
+
+    public function updateAttributeValue(Request $request , $id){
+        $attr_val = AttributeValue::find($id);
+        $attr_val->update([
+            'attribute_id' => $request->attribute_id ,
+            'value' => $request->value ,
+            'value_en' => $request->value_en ,
+            'value_type' => $request->type ,
+            'price' => $request->price ,
+        ]);
         return back();
     }
 

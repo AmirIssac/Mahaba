@@ -36,9 +36,6 @@
                   Description
                 </th>
                 <th>
-                  Unit
-                </th>
-                <th>
                   Category
                 </th>
               </thead>
@@ -48,12 +45,6 @@
                     <td> <input type="text" name="name_en" value="{{$product->name_en}}" class="form-control"> </td>
                     <td> <input type="text" name="name_ar" value="{{$product->name_ar}}" class="form-control"> </td>
                     <td> <input type="text" name="description" value="{{$product->description}}" class="form-control"> </td>
-                    <td>
-                        <select name="unit" class="form-control">
-                            <option value="gram" {{$product->unit == 'gram' ? 'selected' : ''}}>Gram</option>
-                            <option value="piece" {{$product->unit == 'piece' ? 'selected' : ''}}>Piece</option>
-                        </select>
-                    </td>
                     <td>
                         <select name="category_id" class="form-control">
                             @foreach($categories as $category)

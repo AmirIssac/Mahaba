@@ -422,7 +422,7 @@
                         @endif
                     </td>
                     <td class="text-right">
-                      <a><i class="fas fa-tools"></i></a>
+                      <a href="{{ route('edit.attribute.value',$attr_val->id) }}"><i class="fas fa-tools"></i></a>
                     </td>
                   </tr>
                   @endforeach

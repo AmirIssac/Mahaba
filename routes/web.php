@@ -46,6 +46,8 @@ Route::group(['middleware'=>['is_admin','auth']] , function(){
         Route::post('/update/discount/{discount_id}',[AdminInventoryController::class, 'updateDiscount'])->name('update.discount');
         Route::post('/store-attribute',[AdminInventoryController::class, 'storeAttribute'])->name('store.attribute');
         Route::post('/store-attribute-value',[AdminInventoryController::class, 'storeAttributeValue'])->name('store.attribute.value');
+        Route::get('/edit-attribute-value/{attribute_value}',[AdminInventoryController::class, 'editAttributeValue'])->name('edit.attribute.value');
+        Route::post('/update-attribute-value/{attribute_value}',[AdminInventoryController::class, 'updateAttributeValue'])->name('update.attribute.value');
         Route::get('/orders',[App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders');
         Route::get('/edit/order/{order_id}',[App\Http\Controllers\Admin\OrderController::class, 'editOrder'])->name('edit.order');
         Route::post('/transfer/order/{order_id}',[App\Http\Controllers\Admin\OrderController::class, 'transferOrder'])->name('transfer.order');

@@ -110,4 +110,11 @@ class Order extends Model
             return $finished_arr;
         }
     }
+
+    public function isRejected(){
+        if($this->status == 'rejected' || $this->status == 'failed' || $this->status == 'cancelled')
+            return true ;
+        else
+            return false ;
+    }
 }

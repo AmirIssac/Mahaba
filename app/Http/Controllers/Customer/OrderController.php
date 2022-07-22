@@ -130,6 +130,8 @@ class OrderController extends Controller
         DB::beginTransaction();
        // try{
                 $store_id = Store::first()->id;  // mahaba
+                //$order_index = Order::where('status' , '!=' , 'rejected')->where('status' , '!=' , 'failed')->
+                //where('status' , '!=' , 'cancelled')->whereYear('created_at',now()->year)->count();
                 $order_index = Order::whereYear('created_at',now()->year)->count();
                 $number = str_pad($order_index + 1, 6, "0", STR_PAD_LEFT);
                 $order = Order::create([

@@ -63,7 +63,7 @@
               <p>Inventory</p>
             </a>
           </li>
-          <li>
+          <li class="{{Route::is('orders') || Route::is('employee.orders') ? 'active' : ''}}">
             @if(Auth::user()->hasRole(['super_admin']) || Auth::user()->hasRole(['admin']))
             <a href="{{route('orders')}}">
             @elseif(Auth::user()->hasRole(['employee']))
